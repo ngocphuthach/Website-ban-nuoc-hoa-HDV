@@ -97,11 +97,7 @@ HDV/
    - **Trang quản trị (Admin):** `http://localhost:8080/client/pages/admin.html`
    - **Kiểm tra trạng thái API:** `http://localhost:8080/server/health`
 
-4. **Tài khoản Admin mặc định:**
-   - **Email:** `admin@perfume.vn`
-   - **Mật khẩu:** `admin123`
-
-5. **Dừng hệ thống khi không sử dụng:**
+4. **Dừng hệ thống khi không sử dụng:**
    ```bash
    docker compose down
    ```
