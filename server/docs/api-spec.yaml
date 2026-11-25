@@ -1,0 +1,236 @@
+openapi: 3.0.3
+info:
+  title: PerfumeStore SOA RESTful API
+  version: 1.0.0
+  description: Tài liệu mô tả các dịch vụ RESTful API cho hệ thống bán nước hoa PerfumeStore theo kiến trúc hướng dịch vụ (SOA).
+servers:
+  - url: http://localhost/HDV/server
+    description: Local Development Server
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  /health:
+    get:
+      summary: Kiểm tra trạng thái hoạt động của API Server
+      responses:
+        '200':
+          description: Server đang hoạt động bình thường
+  /auth/register:
+    post:
+      summary: Đăng ký tài khoản mới
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fullName, email, password]
+              properties:
+                fullName: { type: string }
+                email: { type: string, format: email }
+                password: { type: string, minLength: 6 }
+                phone: { type: string }
+                address: { type: string }
+      responses:
+        '201':
+          description: Đăng ký thành công, trả về JWT token và thông tin user
+  /auth/login:
+    post:
+      summary: Đăng nhập hệ thống
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string }
+                password: { type: string }
+      responses:
+        '200':
+          description: Đăng nhập thành công, trả về JWT token
+  /auth/me:
+    get:
+      summary: Lấy thông tin người dùng đang đăng nhập
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Thông tin tài khoản hiện tại
+  /products:
+    get:
+      summary: Lấy danh sách sản phẩm (hỗ trợ lọc & phân trang)
+      parameters:
+        - in: query
+          name: brand
+          schema: { type: string }
+        - in: query
+          name: type
+          schema: { type: string }
+        - in: query
+          name: search
+          schema: { type: string }
+        - in: query
+          name: isFeatured
+          schema: { type: integer }
+        - in: query
+          name: isSale
+          schema: { type: integer }
+        - in: query
+          name: isNew
+          schema: { type: integer }
+        - in: query
+          name: page
+          schema: { type: integer, default: 1 }
+        - in: query
+          name: limit
+          schema: { type: integer, default: 12 }
+      responses:
+        '200':
+          description: Danh sách sản phẩm kèm tổng số trang
+    post:
+      summary: Thêm sản phẩm mới (Admin)
+      security:
+        - BearerAuth: []
+      responses:
+        '201':
+          description: Đã tạo sản phẩm
+  /products/{id}:
+    get:
+      summary: Xem chi tiết 1 sản phẩm kèm các dung tích
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Chi tiết sản phẩm
+    put:
+      summary: Cập nhật sản phẩm (Admin)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Cập nhật thành công
+    delete:
+      summary: Xóa sản phẩm (Admin)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Đã xóa sản phẩm
+  /brands:
+    get:
+      summary: Lấy danh sách thương hiệu
+      responses:
+        '200':
+          description: Thành công
+    post:
+      summary: Thêm thương hiệu (Admin)
+      security:
+        - BearerAuth: []
+      responses:
+        '201':
+          description: Đã thêm thương hiệu
+  /categories:
+    get:
+      summary: Lấy danh sách phân loại nước hoa
+      responses:
+        '200':
+          description: Thành công
+    post:
+      summary: Thêm phân loại (Admin)
+      security:
+        - BearerAuth: []
+      responses:
+        '201':
+          description: Đã thêm phân loại
+  /orders:
+    get:
+      summary: Lấy toàn bộ đơn hàng (Admin)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Danh sách đơn hàng
+    post:
+      summary: Tạo đơn hàng mới (User)
+      security:
+        - BearerAuth: []
+      responses:
+        '201':
+          description: Đặt hàng thành công và trừ tồn kho
+  /orders/my:
+    get:
+      summary: Lấy lịch sử đơn hàng của người dùng hiện tại
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Danh sách đơn hàng cá nhân
+  /orders/{id}/status:
+    patch:
+      summary: Cập nhật trạng thái đơn hàng (Admin)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Cập nhật trạng thái thành công
+  /orders/{id}/cancel:
+    patch:
+      summary: Khách hàng tự hủy đơn khi đang Chờ xác nhận
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Đã hủy đơn và hoàn lại tồn kho
+  /users:
+    get:
+      summary: Lấy danh sách người dùng (Admin)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Danh sách users
+  /users/me:
+    put:
+      summary: Cập nhật hồ sơ cá nhân
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Cập nhật thành công
+  /reports/dashboard:
+    get:
+      summary: Thống kê doanh thu, đơn hàng, top sản phẩm bán chạy (Admin)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Dữ liệu dashboard

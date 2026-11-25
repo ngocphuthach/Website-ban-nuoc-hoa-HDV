@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PerfumeStore - Nghệ Thuật Nước Hoa Cao Cấp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- ======================== NAVBAR ======================== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#trang-chu" class="logo">PERFUMESTORE</a>
+            <ul class="nav-links">
+                <li><a href="#trang-chu">Trang Chủ</a></li>
+                <li><a href="#trang-san-pham">Sản Phẩm</a></li>
+                <li><a href="#trang-thuong-hieu">Thương Hiệu</a></li>
+                <li><a href="#trang-gioi-thieu">Giới Thiệu</a></li>
+                <li><a href="#trang-lien-he">Liên Hệ</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button id="btn-open-cart" class="cart-btn" title="Giỏ hàng">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span id="cart-badge">0</span>
+                </button>
+                <div id="nav-user-area"></div>
+                <button id="btn-mobile-menu" class="mobile-menu-btn" aria-label="Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ======================== MAIN CONTENT ======================== -->
+    <main id="main-content">
+        <!-- 1. TRANG CHỦ -->
+        <section id="trang-chu" class="page-section active">
+            <div class="hero-slider" id="hero-slider">
+                <div class="hero-slides">
+                    <div class="hero-slide active" style="background-image: url('../../pic/hinhbanner1.jpg');"></div>
+                    <div class="hero-slide" style="background-image: url('../../pic/hinhbanner2.jpg');"></div>
+                    <div class="hero-slide" style="background-image: url('../../pic/hinh banner 3.jpg');"></div>
+                    <div class="hero-slide" style="background-image: url('../../pic/hinh banner 4.jpg');"></div>
+                    <div class="hero-slide" style="background-image: url('../../pic/hinh banner 5.jpg');"></div>
+                </div>
+                <div class="hero-overlay"></div>
+                <div class="container hero-content">
+                    <span class="hero-tag">Haute Parfumerie • Chính Hãng 100%</span>
+                    <h1 class="hero-title">Đánh Thức Bản Sắc Qua Từng Giọt Hương</h1>
+                    <p class="hero-desc">
+                        Khám phá bộ sưu tập nước hoa cao cấp tuyển chọn từ Dior, Chanel, Tom Ford, Creed và nhiều nhà chế tác danh tiếng thế giới.
+                    </p>
+                    <div class="hero-cta">
+                        <a href="#trang-san-pham" class="btn-gold">Khám Phá Bộ Sưu Tập</a>
+                        <a href="#trang-thuong-hieu" class="btn-outline">Xem Thương Hiệu</a>
+                    </div>
+                </div>
+                <button type="button" class="hero-nav hero-prev" onclick="app.homePage.prevSlide()" aria-label="Slide trước">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button type="button" class="hero-nav hero-next" onclick="app.homePage.nextSlide()" aria-label="Slide tiếp">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <div class="hero-dots" id="hero-dots"></div>
+                <div class="hero-progress"><div class="hero-progress-bar" id="hero-progress-bar"></div></div>
+            </div>
+
+            <!-- Brand Slider -->
+            <div class="brand-marquee-wrap">
+                <div id="home-brand-slider" class="brand-marquee-track"></div>
+            </div>
+
+            <!-- Sản phẩm nổi bật -->
+            <div class="section-block container">
+                <div class="section-header">
+                    <h2>Tuyệt Tác Nổi Bật</h2>
+                    <div class="divider"></div>
+                    <p>Những mùi hương được yêu thích và săn đón nhất tại PerfumeStore</p>
+                </div>
+                <div id="home-featured-grid" class="product-grid"></div>
+            </div>
+
+            <!-- Sản phẩm giảm giá -->
+            <div class="section-block container">
+                <div class="section-header">
+                    <h2>Ưu Đãi Độc Quyền</h2>
+                    <div class="divider"></div>
+                    <p>Sở hữu hương thơm đẳng cấp với mức giá ưu đãi giới hạn</p>
+                </div>
+                <div id="home-sale-grid" class="product-grid"></div>
+            </div>
+
+            <!-- Sản phẩm mới -->
+            <div class="section-block container">
+                <div class="section-header">
+                    <h2>Hương Thơm Mới Ra Mắt</h2>
+                    <div class="divider"></div>
+                    <p>Cập nhật xu hướng mùi hương mới nhất mùa này</p>
+                </div>
+                <div id="home-new-grid" class="product-grid"></div>
+            </div>
+        </section>
+
+        <!-- 2. TRANG SẢN PHẨM -->
+        <section id="trang-san-pham" class="page-section section-block">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Bộ Sưu Tập Nước Hoa</h2>
+                    <div class="divider"></div>
+                    <p id="product-count-info">Đang tải danh sách sản phẩm...</p>
+                </div>
+
+                <div class="filter-bar">
+                    <input type="text" id="filter-search" placeholder="Tìm tên nước hoa, mã SP, thương hiệu...">
+                    <select id="filter-brand"><option value="">Tất cả thương hiệu</option></select>
+                    <select id="filter-type"><option value="">Tất cả phân loại</option></select>
+                    <select id="filter-sort">
+                        <option value="">Mới nhất</option>
+                        <option value="name_asc">Tên A → Z</option>
+                        <option value="discount_desc">Giảm giá nhiều nhất</option>
+                    </select>
+                    <button id="btn-reset-filter" class="btn-outline btn-sm">Đặt lại</button>
+                </div>
+
+                <div id="product-grid" class="product-grid"></div>
+                <div id="product-pagination" class="pagination"></div>
+            </div>
+        </section>
+
+        <!-- 3. TRANG THƯƠNG HIỆU -->
+        <section id="trang-thuong-hieu" class="page-section section-block">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Thương Hiệu Danh Tiếng</h2>
+                    <div class="divider"></div>
+                    <p>Chọn thương hiệu yêu thích để lọc nhanh bộ sưu tập</p>
+                </div>
+                <div id="brand-page-grid" class="brand-grid"></div>
+            </div>
+        </section>
+
+        <!-- 4. TRANG CHI TIẾT SẢN PHẨM -->
+        <section id="trang-chi-tiet" class="page-section section-block">
+            <div class="container">
+                <div style="margin-bottom: 20px;">
+                    <a href="#trang-san-pham" class="btn-outline btn-sm"><i class="fa-solid fa-arrow-left"></i> Quay lại sản phẩm</a>
+                </div>
+                <div id="product-detail-container" class="detail-layout"></div>
+
+                <div class="section-block" style="padding-bottom: 0;">
+                    <div class="section-header">
+                        <h2>Sản Phẩm Cùng Thương Hiệu</h2>
+                        <div class="divider"></div>
+                    </div>
+                    <div id="related-products-grid" class="product-grid"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. TRANG GIỎ HÀNG -->
+        <section id="trang-gio-hang" class="page-section section-block">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Giỏ Hàng Của Bạn</h2>
+                    <div class="divider"></div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Đơn giá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                            <th>Xóa</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-page-items"></tbody>
+                </table>
+                <div class="card-box" style="max-width: 420px; margin: 28px 0 0 auto;">
+                    <div class="cart-total-row">
+                        <span>Tạm tính:</span>
+                        <strong id="cart-page-subtotal">0 ₫</strong>
+                    </div>
+                    <div class="cart-total-row">
+                        <span>Tổng thanh toán:</span>
+                        <strong id="cart-page-total" class="gold-text">0 ₫</strong>
+                    </div>
+                    <a href="#trang-thanh-toan" class="btn-gold" style="width: 100%;">Tiến Hành Thanh Toán</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. TRANG THANH TOÁN -->
+        <section id="trang-thanh-toan" class="page-section section-block">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Thanh Toán Đơn Hàng</h2>
+                    <div class="divider"></div>
+                </div>
+                <div class="checkout-layout">
+                    <form id="checkout-form" class="card-box">
+                        <h3 style="color: var(--gold-light); margin-bottom: 18px;">Thông Tin Giao Hàng</h3>
+                        <div class="form-group">
+                            <label>Họ tên người nhận</label>
+                            <input type="text" id="checkout-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="checkout-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Số điện thoại</label>
+                            <input type="tel" id="checkout-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Địa chỉ nhận hàng</label>
+                            <textarea id="checkout-address" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Phương thức thanh toán</label>
+                            <div style="display: flex; gap: 18px; margin-top: 8px;">
+                                <label style="display: flex; align-items: center; gap: 6px; color: var(--text);">
+                                    <input type="radio" name="paymentMethod" value="COD" checked style="width: auto;"> Thanh toán khi nhận hàng (COD)
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; color: var(--text);">
+                                    <input type="radio" name="paymentMethod" value="Chuyển khoản" style="width: auto;"> Chuyển khoản ngân hàng
+                                </label>
+                            </div>
+                        </div>
+                        <div id="checkout-qr-box" class="qr-box">
+                            <p style="color: var(--gold-light); margin-bottom: 6px;"><strong>Thông Tin Chuyển Khoản</strong></p>
+                            <p style="font-size: 13px; color: var(--text-muted);">Ngân hàng Vietcombank • STK: 1029384756 • Chủ TK: PERFUMESTORE</p>
+                            <p style="font-size: 12px; color: var(--text-muted);">Nội dung: [Số điện thoại của bạn]</p>
+                        </div>
+                        <button type="submit" class="btn-gold" style="width: 100%; margin-top: 20px;">Xác Nhận Đặt Hàng</button>
+                    </form>
+
+                    <div class="card-box" style="height: fit-content;">
+                        <h3 style="color: var(--gold-light); margin-bottom: 16px;">Tóm Tắt Đơn Hàng</h3>
+                        <div id="checkout-items-summary"></div>
+                        <div class="cart-total-row" style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border);">
+                            <strong>Tổng cộng:</strong>
+                            <strong id="checkout-total" class="gold-text">0 ₫</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. TRANG GIỚI THIỆU -->
+        <section id="trang-gioi-thieu" class="page-section section-block">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Về PerfumeStore</h2>
+                    <div class="divider"></div>
+                </div>
+                <div class="policy-box">
+                    <h3>Hành Trình Kiến Tạo Hương Thơm</h3>
+                    <p>PerfumeStore là hệ thống phân phối nước hoa chính hãng cao cấp, được xây dựng theo kiến trúc hướng dịch vụ (SOA) hiện đại nhằm mang đến trải nghiệm mua sắm mượt mà, minh bạch và đẳng cấp.</p>
+                    <h3>Cam Kết Chất Lượng</h3>
+                    <ul>
+                        <li>100% sản phẩm nhập khẩu chính ngạch, đầy đủ tem nhãn và mã vạch kiểm chứng.</li>
+                        <li>Bảo quản trong môi trường tiêu chuẩn nhiệt độ giúp giữ trọn vẹn tầng hương nguyên bản.</li>
+                        <li>Tư vấn mùi hương cá nhân hóa theo phong cách và dịp sử dụng.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. TRANG LIÊN HỆ -->
+        <section id="trang-lien-he" class="page-section section-block">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Liên Hệ Với Chúng Tôi</h2>
+                    <div class="divider"></div>
+                </div>
+                <div class="checkout-layout">
+                    <div class="card-box">
+                        <h3 style="color: var(--gold-light); margin-bottom: 14px;">Boutique PerfumeStore</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 10px;"><i class="fa-solid fa-location-dot gold-text"></i> 123 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh</p>
+                        <p style="color: var(--text-muted); margin-bottom: 10px;"><i class="fa-solid fa-phone gold-text"></i> 1900 8888 (08:30 - 21:30)</p>
+                        <p style="color: var(--text-muted);"><i class="fa-solid fa-envelope gold-text"></i> support@perfume.vn</p>
+                    </div>
+                    <form id="contact-form" class="card-box">
+                        <div class="form-group"><label>Họ và tên</label><input type="text" required></div>
+                        <div class="form-group"><label>Email</label><input type="email" required></div>
+                        <div class="form-group"><label>Nội dung</label><textarea rows="4" required></textarea></div>
+                        <button type="submit" class="btn-gold">Gửi Tin Nhắn</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. TRANG ĐĂNG NHẬP -->
+        <section id="trang-dang-nhap" class="page-section section-block">
+            <div class="container">
+                <form id="login-form" class="auth-card">
+                    <h2>Đăng Nhập</h2>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="login-email" placeholder="example@gmail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mật khẩu</label>
+                        <input type="password" id="login-password" placeholder="••••••" required>
+                    </div>
+                    <button type="submit" class="btn-gold" style="width: 100%; margin-top: 8px;">Đăng Nhập</button>
+                    <p style="text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-muted);">
+                        Chưa có tài khoản? <a href="#trang-dang-ky" class="gold-text">Đăng ký ngay</a>
+                    </p>
+                </form>
+            </div>
+        </section>
+
+        <!-- 10. TRANG ĐĂNG KÝ -->
+        <section id="trang-dang-ky" class="page-section section-block">
+            <div class="container">
+                <form id="register-form" class="auth-card">
+                    <h2>Tạo Tài Khoản</h2>
+                    <div class="form-group"><label>Họ và tên</label><input type="text" id="reg-fullname" required></div>
+                    <div class="form-group"><label>Email</label><input type="email" id="reg-email" required></div>
+                    <div class="form-group"><label>Số điện thoại</label><input type="tel" id="reg-phone"></div>
+                    <div class="form-group"><label>Địa chỉ</label><input type="text" id="reg-address"></div>
+                    <div class="form-group"><label>Mật khẩu (tối thiểu 6 ký tự)</label><input type="password" id="reg-password" minlength="6" required></div>
+                    <button type="submit" class="btn-gold" style="width: 100%; margin-top: 8px;">Đăng Ký</button>
+                    <p style="text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-muted);">
+                        Đã có tài khoản? <a href="#trang-dang-nhap" class="gold-text">Đăng nhập</a>
+                    </p>
+                </form>
+            </div>
+        </section>
+
+        <!-- 11. TRANG LỊCH SỬ ĐƠN HÀNG -->
+        <section id="trang-lich-su" class="page-section section-block">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Lịch Sử Đơn Hàng</h2>
+                    <div class="divider"></div>
+                </div>
+                <div id="my-orders-list"></div>
+            </div>
+        </section>
+
+        <!-- 12. TRANG HỒ SƠ -->
+        <section id="trang-ho-so" class="page-section section-block">
+            <div class="container">
+                <form id="profile-form" class="auth-card" style="max-width: 540px;">
+                    <h2>Hồ Sơ Cá Nhân</h2>
+                    <div class="form-group"><label>Họ và tên</label><input type="text" id="profile-fullname" required></div>
+                    <div class="form-group"><label>Email</label><input type="email" id="profile-email" disabled></div>
+                    <div class="form-group"><label>Số điện thoại</label><input type="tel" id="profile-phone"></div>
+                    <div class="form-group"><label>Địa chỉ mặc định</label><input type="text" id="profile-address"></div>
+                    <button type="submit" class="btn-gold" style="width: 100%;">Lưu Thay Đổi</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 13-17. CÁC TRANG CHÍNH SÁCH & HƯỚNG DẪN -->
+        <section id="trang-bao-hanh" class="page-section section-block">
+            <div class="container policy-box">
+                <div class="section-header"><h2>Chính Sách Bảo Hành</h2><div class="divider"></div></div>
+                <p>PerfumeStore bảo hành chính hãng trọn đời về nguồn gốc xuất xứ sản phẩm và bảo hành vòi xịt trong vòng 30 ngày kể từ ngày nhận hàng.</p>
+            </div>
+        </section>
+
+        <section id="trang-doi-tra" class="page-section section-block">
+            <div class="container policy-box">
+                <div class="section-header"><h2>Chính Sách Đổi Trả</h2><div class="divider"></div></div>
+                <p>Hỗ trợ đổi trả miễn phí trong 7 ngày nếu sản phẩm còn nguyên seal, chưa qua sử dụng hoặc bị lỗi do vận chuyển / nhà sản xuất.</p>
+            </div>
+        </section>
+
+        <section id="trang-giao-hang" class="page-section section-block">
+            <div class="container policy-box">
+                <div class="section-header"><h2>Thông Tin Giao Hàng</h2><div class="divider"></div></div>
+                <p>Giao hàng hỏa tốc nội thành trong 2 giờ. Giao hàng toàn quốc từ 1 - 3 ngày làm việc với đóng gói chống sốc chuyên dụng.</p>
+            </div>
+        </section>
+
+        <section id="trang-bao-mat" class="page-section section-block">
+            <div class="container policy-box">
+                <div class="section-header"><h2>Chính Sách Bảo Mật</h2><div class="divider"></div></div>
+                <p>Mọi thông tin cá nhân và lịch sử giao dịch của khách hàng đều được mã hóa an toàn và chỉ phục vụ cho mục đích giao nhận đơn hàng.</p>
+            </div>
+        </section>
+
+        <section id="trang-huong-dan" class="page-section section-block">
+            <div class="container policy-box">
+                <div class="section-header"><h2>Hướng Dẫn Mua Hàng</h2><div class="divider"></div></div>
+                <ul>
+                    <li>Bước 1: Chọn nước hoa yêu thích và dung tích phù hợp (10ml, 50ml, 100ml).</li>
+                    <li>Bước 2: Thêm vào giỏ hàng và kiểm tra lại số lượng.</li>
+                    <li>Bước 3: Đăng nhập tài khoản, điền địa chỉ giao hàng và xác nhận đặt đơn.</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- ======================== FOOTER ======================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="logo" style="margin-bottom: 12px;">PERFUMESTORE</div>
+                    <p style="color: var(--text-muted); font-size: 13px;">Hệ thống nước hoa cao cấp chính hãng, phát triển theo kiến trúc hướng dịch vụ (SOA).</p>
+                </div>
+                <div>
+                    <h4>Khám Phá</h4>
+                    <ul>
+                        <li><a href="#trang-san-pham">Tất cả sản phẩm</a></li>
+                        <li><a href="#trang-thuong-hieu">Thương hiệu</a></li>
+                        <li><a href="#trang-gioi-thieu">Về chúng tôi</a></li>
+                        <li><a href="#trang-lien-he">Liên hệ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Chính Sách</h4>
+                    <ul>
+                        <li><a href="#trang-bao-hanh">Chính sách bảo hành</a></li>
+                        <li><a href="#trang-doi-tra">Chính sách đổi trả</a></li>
+                        <li><a href="#trang-giao-hang">Thông tin giao hàng</a></li>
+                        <li><a href="#trang-bao-mat">Chính sách bảo mật</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Hỗ Trợ</h4>
+                    <ul>
+                        <li><a href="#trang-huong-dan">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#trang-lich-su">Tra cứu đơn hàng</a></li>
+                        <li><a href="#trang-ho-so">Tài khoản của tôi</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 PerfumeStore SOA Project. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ======================== CART SIDEBAR & OVERLAY ======================== -->
+    <div id="cart-overlay" class="cart-overlay"></div>
+    <aside id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-sidebar-header">
+            <h3>Giỏ Hàng</h3>
+            <button id="btn-close-cart" class="modal-close">&times;</button>
+        </div>
+        <div id="cart-sidebar-items" class="cart-sidebar-items"></div>
+        <div class="cart-sidebar-footer">
+            <div class="cart-total-row">
+                <span>Tổng cộng:</span>
+                <strong id="cart-sidebar-total" class="gold-text">0 ₫</strong>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <a href="#trang-gio-hang" class="btn-outline btn-sm" onclick="app.toggleCartSidebar(false)">Xem Giỏ</a>
+                <a href="#trang-thanh-toan" class="btn-gold btn-sm" onclick="app.toggleCartSidebar(false)">Thanh Toán</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ======================== MODAL CHỌN SIZE NHANH ======================== -->
+    <div id="size-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="quick-modal-title">Chọn dung tích</h3>
+                <button class="modal-close" onclick="app.closeQuickModal()">&times;</button>
+            </div>
+            <div id="quick-modal-sizes" class="size-buttons" style="margin-bottom: 24px;"></div>
+            <button class="btn-gold" style="width: 100%;" onclick="app.confirmQuickAdd()">Thêm Vào Giỏ Hàng</button>
+        </div>
+    </div>
+
+    <!-- ======================== TOAST CONTAINER ======================== -->
+    <div id="toast-container"></div>
+
+    <!-- ======================== SCRIPTS ======================== -->
+    <script src="../js/services/api.service.js"></script>
+    <script src="../js/services/auth.service.js"></script>
+    <script src="../js/services/product.service.js"></script>
+    <script src="../js/services/brand.service.js"></script>
+    <script src="../js/services/category.service.js"></script>
+    <script src="../js/services/order.service.js"></script>
+    <script src="../js/services/user.service.js"></script>
+    <script src="../js/services/report.service.js"></script>
+    <script src="../js/components/toast.js"></script>
+    <script src="../js/components/cart.js"></script>
+    <script src="../js/components/product-card.js"></script>
+    <script src="../js/pages/home.js"></script>
+    <script src="../js/pages/product-list.js"></script>
+    <script src="../js/pages/product-detail.js"></script>
+    <script src="../js/pages/checkout.js"></script>
+    <script src="../js/pages/profile.js"></script>
+    <script src="../js/pages/orders.js"></script>
+    <script src="../js/app.js"></script>
+</body>
+</html>
