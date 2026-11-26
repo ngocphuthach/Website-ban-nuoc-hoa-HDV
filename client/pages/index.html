@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PerfumeStore - Nghệ Thuật Nước Hoa Cao Cấp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
 </head>
@@ -36,53 +39,78 @@
     <main id="main-content">
         <!-- 1. TRANG CHỦ -->
         <section id="trang-chu" class="page-section active">
-            <div class="hero-slider" id="hero-slider">
-                <div class="hero-slides">
-                    <div class="hero-slide active" style="background-image: url('../../pic/hinhbanner1.jpg');"></div>
-                    <div class="hero-slide" style="background-image: url('../../pic/hinhbanner2.jpg');"></div>
-                    <div class="hero-slide" style="background-image: url('../../pic/hinh banner 3.jpg');"></div>
-                    <div class="hero-slide" style="background-image: url('../../pic/hinh banner 4.jpg');"></div>
-                    <div class="hero-slide" style="background-image: url('../../pic/hinh banner 5.jpg');"></div>
-                </div>
-                <div class="hero-overlay"></div>
-                <div class="container hero-content">
-                    <span class="hero-tag">Haute Parfumerie • Chính Hãng 100%</span>
-                    <h1 class="hero-title">Đánh Thức Bản Sắc Qua Từng Giọt Hương</h1>
-                    <p class="hero-desc">
-                        Khám phá bộ sưu tập nước hoa cao cấp tuyển chọn từ Dior, Chanel, Tom Ford, Creed và nhiều nhà chế tác danh tiếng thế giới.
-                    </p>
-                    <div class="hero-cta">
-                        <a href="#trang-san-pham" class="btn-gold">Khám Phá Bộ Sưu Tập</a>
-                        <a href="#trang-thuong-hieu" class="btn-outline">Xem Thương Hiệu</a>
+            <!-- Hero Banner 2 cột bất đối xứng -->
+            <div class="hero-editorial" id="hero-editorial">
+                <div class="container hero-editorial-grid">
+                    <div class="hero-editorial-left">
+                        <span class="hero-tag">L'Art de la Parfumerie • Chính Hãng 100%</span>
+                        <h1 class="hero-title">Đánh Thức Bản Sắc Qua Từng Giọt Hương</h1>
+                        <p class="hero-desc">
+                            Khám phá tuyệt tác hương thơm tuyển chọn từ Dior, Chanel, Tom Ford, Creed — nơi nghệ thuật chế tác phương Tây hòa quyện cùng phong thái thượng lưu đương đại.
+                        </p>
+                        <div class="hero-cta">
+                            <a href="#trang-san-pham" class="btn-gold">Khám Phá Bộ Sưu Tập</a>
+                            <a href="#trang-thuong-hieu" class="btn-outline">Thương Hiệu Đối Tác</a>
+                        </div>
+                    </div>
+                    <div class="hero-editorial-right">
+                        <div class="hero-glow"></div>
+                        <div class="hero-visual-card" id="hero-parallax-box">
+                            <img src="../../pic/banner-hero.jpg" alt="Nước hoa cao cấp PerfumeStore" onerror="this.onerror=null;this.src='../../pic/hinhbanner1.jpg'">
+                            <div class="hero-visual-caption">
+                                <span>Edition Privée</span>
+                                <small>Extrait de Parfum</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <button type="button" class="hero-nav hero-prev" onclick="app.homePage.prevSlide()" aria-label="Slide trước">
-                    <i class="fa-solid fa-chevron-left"></i>
-                </button>
-                <button type="button" class="hero-nav hero-next" onclick="app.homePage.nextSlide()" aria-label="Slide tiếp">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </button>
-                <div class="hero-dots" id="hero-dots"></div>
-                <div class="hero-progress"><div class="hero-progress-bar" id="hero-progress-bar"></div></div>
             </div>
 
-            <!-- Brand Slider -->
-            <div class="brand-marquee-wrap">
+            <!-- Dải thương hiệu đối tác -->
+            <div class="brand-marquee-wrap home-reveal-block">
                 <div id="home-brand-slider" class="brand-marquee-track"></div>
             </div>
 
-            <!-- Sản phẩm nổi bật -->
-            <div class="section-block container">
+            <!-- Câu chuyện thương hiệu (Brand Heritage) -->
+            <div class="section-block container heritage-section home-reveal-block">
+                <div class="heritage-grid">
+                    <div class="heritage-media">
+                        <img src="../../pic/banner-story.jpg" alt="Nghệ thuật chế tác nước hoa" onerror="this.onerror=null;this.src='../../pic/anhgioithieu1.jpg'">
+                    </div>
+                    <div class="heritage-content glass-card">
+                        <span class="hero-tag">Brand Heritage • Di Sản Mùi Hương</span>
+                        <h2>Nghệ Thuật Chế Tác Từ Những Tầng Hương Nguyên Bản</h2>
+                        <p>
+                            Mỗi giọt nước hoa tại PerfumeStore là kết tinh của hàng trăm tinh dầu quý hiếm được ủ chín trong thời gian chuẩn mực, lưu giữ trọn vẹn tầng hương đầu thanh khiết, tầng hương giữa quyến rũ và hậu hương sâu lắng.
+                        </p>
+                        <div class="heritage-pillars">
+                            <div><strong>100%</strong><span>Chính hãng nhập khẩu</span></div>
+                            <div><strong>12H+</strong><span>Độ lưu hương bền bỉ</span></div>
+                            <div><strong>10+</strong><span>Maison danh tiếng</span></div>
+                        </div>
+                        <a href="#trang-gioi-thieu" class="btn-outline btn-sm">Tìm Hiểu Thêm</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sản phẩm nổi bật & Bộ sưu tập (lọc mượt từ API) -->
+            <div class="section-block container home-reveal-block">
                 <div class="section-header">
                     <h2>Tuyệt Tác Nổi Bật</h2>
                     <div class="divider"></div>
                     <p>Những mùi hương được yêu thích và săn đón nhất tại PerfumeStore</p>
+                    <div class="home-filter-tabs" id="home-filter-tabs">
+                        <button type="button" class="home-tab-btn active" onclick="app.homePage.filterFeatured('', this)">Tất cả</button>
+                        <button type="button" class="home-tab-btn" onclick="app.homePage.filterFeatured('nam', this)">Nước hoa Nam</button>
+                        <button type="button" class="home-tab-btn" onclick="app.homePage.filterFeatured('nu', this)">Nước hoa Nữ</button>
+                        <button type="button" class="home-tab-btn" onclick="app.homePage.filterFeatured('unisex', this)">Unisex</button>
+                    </div>
                 </div>
                 <div id="home-featured-grid" class="product-grid"></div>
             </div>
 
             <!-- Sản phẩm giảm giá -->
-            <div class="section-block container">
+            <div class="section-block container home-reveal-block">
                 <div class="section-header">
                     <h2>Ưu Đãi Độc Quyền</h2>
                     <div class="divider"></div>
@@ -92,13 +120,55 @@
             </div>
 
             <!-- Sản phẩm mới -->
-            <div class="section-block container">
+            <div class="section-block container home-reveal-block">
                 <div class="section-header">
                     <h2>Hương Thơm Mới Ra Mắt</h2>
                     <div class="divider"></div>
                     <p>Cập nhật xu hướng mùi hương mới nhất mùa này</p>
                 </div>
                 <div id="home-new-grid" class="product-grid"></div>
+            </div>
+
+            <!-- Tư vấn mùi hương & Liên hệ (Concierge & Contact) -->
+            <div class="section-block container concierge-section home-reveal-block">
+                <div class="concierge-grid glass-card">
+                    <div class="concierge-media">
+                        <img src="../../pic/banner-contact.jpg" alt="Tư vấn mùi hương PerfumeStore" onerror="this.onerror=null;this.src='../../pic/anhgioithieu2.jpg'">
+                        <div class="concierge-media-overlay">
+                            <span>Private Fragrance Concierge</span>
+                            <p>Đội ngũ chuyên gia mùi hương sẵn sàng đồng hành cùng phong cách riêng của bạn.</p>
+                        </div>
+                    </div>
+                    <form id="home-concierge-form" class="concierge-form">
+                        <span class="hero-tag">Concierge • Tư Vấn Riêng</span>
+                        <h2>Đặt Lịch Tư Vấn Mùi Hương</h2>
+                        <p class="concierge-sub">Để lại thông tin để nhận gợi ý mùi hương phù hợp nhất với cá tính và dịp sử dụng.</p>
+                        <div class="form-group">
+                            <label>Họ và tên</label>
+                            <input type="text" id="concierge-name" placeholder="Nguyễn Văn A" required>
+                        </div>
+                        <div class="concierge-row">
+                            <div class="form-group">
+                                <label>Số điện thoại / Email</label>
+                                <input type="text" id="concierge-contact" placeholder="0901 234 567" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Nhóm hương quan tâm</label>
+                                <select id="concierge-scent">
+                                    <option value="Gỗ & Hổ phách (Trầm ấm)">Gỗ & Hổ phách (Trầm ấm)</option>
+                                    <option value="Hoa cỏ & Xạ hương (Thanh lịch)">Hoa cỏ & Xạ hương (Thanh lịch)</option>
+                                    <option value="Cam chanh & Biển (Tươi mát)">Cam chanh & Biển (Tươi mát)</option>
+                                    <option value="Quà tặng cao cấp">Quà tặng cao cấp</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Lời nhắn thêm</label>
+                            <textarea id="concierge-note" rows="3" placeholder="Phong cách hoặc dòng nước hoa bạn đang tìm kiếm..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-gold" style="width: 100%;">Gửi Yêu Cầu Tư Vấn</button>
+                    </form>
+                </div>
             </div>
         </section>
 
@@ -250,46 +320,12 @@
 
         <!-- 7. TRANG GIỚI THIỆU -->
         <section id="trang-gioi-thieu" class="page-section section-block">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Về PerfumeStore</h2>
-                    <div class="divider"></div>
-                </div>
-                <div class="policy-box">
-                    <h3>Hành Trình Kiến Tạo Hương Thơm</h3>
-                    <p>PerfumeStore là hệ thống phân phối nước hoa chính hãng cao cấp, được xây dựng theo kiến trúc hướng dịch vụ (SOA) hiện đại nhằm mang đến trải nghiệm mua sắm mượt mà, minh bạch và đẳng cấp.</p>
-                    <h3>Cam Kết Chất Lượng</h3>
-                    <ul>
-                        <li>100% sản phẩm nhập khẩu chính ngạch, đầy đủ tem nhãn và mã vạch kiểm chứng.</li>
-                        <li>Bảo quản trong môi trường tiêu chuẩn nhiệt độ giúp giữ trọn vẹn tầng hương nguyên bản.</li>
-                        <li>Tư vấn mùi hương cá nhân hóa theo phong cách và dịp sử dụng.</li>
-                    </ul>
-                </div>
-            </div>
+            <div id="about-page-root" class="container"></div>
         </section>
 
         <!-- 8. TRANG LIÊN HỆ -->
         <section id="trang-lien-he" class="page-section section-block">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Liên Hệ Với Chúng Tôi</h2>
-                    <div class="divider"></div>
-                </div>
-                <div class="checkout-layout">
-                    <div class="card-box">
-                        <h3 style="color: var(--gold-light); margin-bottom: 14px;">Boutique PerfumeStore</h3>
-                        <p style="color: var(--text-muted); margin-bottom: 10px;"><i class="fa-solid fa-location-dot gold-text"></i> 123 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh</p>
-                        <p style="color: var(--text-muted); margin-bottom: 10px;"><i class="fa-solid fa-phone gold-text"></i> 1900 8888 (08:30 - 21:30)</p>
-                        <p style="color: var(--text-muted);"><i class="fa-solid fa-envelope gold-text"></i> support@perfume.vn</p>
-                    </div>
-                    <form id="contact-form" class="card-box">
-                        <div class="form-group"><label>Họ và tên</label><input type="text" required></div>
-                        <div class="form-group"><label>Email</label><input type="email" required></div>
-                        <div class="form-group"><label>Nội dung</label><textarea rows="4" required></textarea></div>
-                        <button type="submit" class="btn-gold">Gửi Tin Nhắn</button>
-                    </form>
-                </div>
-            </div>
+            <div id="contact-page-root" class="container"></div>
         </section>
 
         <!-- 9. TRANG ĐĂNG NHẬP -->
@@ -474,6 +510,10 @@
     <div id="toast-container"></div>
 
     <!-- ======================== SCRIPTS ======================== -->
+    <!-- GSAP & ScrollTrigger cho hiệu ứng cuộn & micro-interaction -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
     <script src="../js/services/api.service.js"></script>
     <script src="../js/services/auth.service.js"></script>
     <script src="../js/services/product.service.js"></script>

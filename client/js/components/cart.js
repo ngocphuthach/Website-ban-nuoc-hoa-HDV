@@ -49,6 +49,12 @@ class Cart {
 
         this.saveItems(items);
         toast.success(`Đã thêm ${product.name} (${ml}ml) vào giỏ hàng`);
+
+        // Hiệu ứng nảy mượt trên icon giỏ hàng khi thêm sản phẩm
+        const cartBtn = document.getElementById('btn-open-cart');
+        if (cartBtn && window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            gsap.fromTo(cartBtn, { scale: 0.85 }, { scale: 1, duration: 0.55, ease: 'elastic.out(1, 0.4)' });
+        }
     }
 
     removeItem(productId, ml) {
@@ -140,6 +146,13 @@ class Cart {
         `; }).join('');
 
         totalEl.textContent = this.formatPrice(this.getTotal());
+
+        if (window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            gsap.fromTo('#cart-sidebar-items .cart-sidebar-item',
+                { x: 18, opacity: 0 },
+                { x: 0, opacity: 1, duration: 0.35, stagger: 0.05, ease: 'power2.out', clearProps: 'transform' }
+            );
+        }
     }
 
     // Render bảng giỏ hàng đầy đủ tại trang #trang-gio-hang

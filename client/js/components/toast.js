@@ -25,6 +25,7 @@ class Toast {
             <i class="fa-solid ${icons[type] || icons.info}"></i>
             <span class="toast-msg">${message}</span>
             <button class="toast-close" aria-label="Đóng">&times;</button>
+            <div class="toast-progress" style="animation-duration: ${duration}ms;"></div>
         `;
 
         toastEl.querySelector('.toast-close').addEventListener('click', () => {

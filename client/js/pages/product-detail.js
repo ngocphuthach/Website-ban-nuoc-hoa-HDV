@@ -42,12 +42,13 @@ class ProductDetailPage {
                 <p class="detail-desc">${p.shortDesc || 'Mùi hương sang trọng, lưu hương lâu bền suốt ngày dài.'}</p>
 
                 <div class="detail-sizes">
-                    <label>Chọn dung tích:</label>
+                    <label>Chọn dung tích (Chai chính hãng):</label>
                     <div class="size-buttons" id="detail-size-buttons">
                         ${sizes.map((s, idx) => `
-                            <button type="button" class="size-btn ${idx === 0 ? 'active' : ''}"
+                            <button type="button" class="size-btn metal-size-btn ${idx === 0 ? 'active' : ''} ${s.stock <= 0 ? 'disabled' : ''}"
                                 onclick="app.productDetailPage.selectSize(${s.ml})">
-                                ${s.ml}ml ${s.stock <= 0 ? '(Hết hàng)' : ''}
+                                <span class="size-ml">${s.ml}ml</span>
+                                <small class="size-tag">${s.stock <= 0 ? 'Hết hàng' : `Còn ${s.stock}`}</small>
                             </button>
                         `).join('')}
                     </div>
@@ -132,7 +133,7 @@ class ProductDetailPage {
             container.innerHTML = items.length
                 ? items.map(createProductCard).join('')
                 : '<p class="empty-msg">Không có sản phẩm liên quan.</p>';
-            container.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+            animateProductCards('#related-products-grid');
         } catch (err) {
             container.innerHTML = '';
         }

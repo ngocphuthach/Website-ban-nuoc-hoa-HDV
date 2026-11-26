@@ -29,7 +29,7 @@ function createProductCard(product) {
                     <button class="btn-overlay" onclick="app.openProductDetail(${product.id})" title="Xem chi tiết">
                         <i class="fa-regular fa-eye"></i>
                     </button>
-                    <button class="btn-overlay" onclick="app.openQuickSizeModal('${safeJson}')" title="Thêm vào giỏ">
+                    <button class="btn-overlay btn-add-bounce" onclick="app.openQuickSizeModal('${safeJson}')" title="Thêm vào giỏ">
                         <i class="fa-solid fa-bag-shopping"></i>
                     </button>
                 </div>
@@ -45,4 +45,36 @@ function createProductCard(product) {
             </div>
         </article>
     `;
+}
+
+// Kích hoạt hiệu ứng xuất hiện theo nhịp (GSAP ScrollTrigger Stagger) cho danh sách sản phẩm
+function animateProductCards(containerSelector) {
+    const cards = document.querySelectorAll(`${containerSelector} .product-card`);
+    if (!cards.length) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion || !window.gsap || !window.ScrollTrigger) {
+        cards.forEach(c => { c.style.opacity = '1'; });
+        return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.set(cards, { opacity: 0, y: 34, scale: 0.96 });
+
+    ScrollTrigger.batch(cards, {
+        start: 'top 90%',
+        once: true,
+        onEnter: (batch) => {
+            gsap.to(batch, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.65,
+                stagger: 0.09,
+                ease: 'power3.out',
+                clearProps: 'transform'
+            });
+        }
+    });
+    ScrollTrigger.refresh();
 }

@@ -117,7 +117,7 @@ class ProductListPage {
                     </div>`;
             } else {
                 grid.innerHTML = items.map(createProductCard).join('');
-                document.querySelectorAll('#product-grid .reveal').forEach(el => el.classList.add('visible'));
+                animateProductCards('#product-grid');
             }
 
             this.renderPagination(res.page || 1, res.totalPages || 1);
