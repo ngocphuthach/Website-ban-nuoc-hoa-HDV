@@ -1,9 +1,10 @@
 services:
   web:
     build: .
+    command: ["sh", "-c", "mkdir -p /var/www/html/pic/uploads && chown www-data:www-data /var/www/html/pic/uploads && apache2-foreground"]
     container_name: perfumestore-soa
     ports:
-      - "8080:80"
+      - "127.0.0.1:8080:80"
     volumes:
       - .:/var/www/html
     environment:
@@ -11,6 +12,12 @@ services:
       DB_NAME: perfumestore
       DB_USER: root
       DB_PASS: root
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Run setup-local.ps1 first}
+      VNPAY_TMN_CODE: ${VNPAY_TMN_CODE:-}
+      VNPAY_HASH_SECRET: ${VNPAY_HASH_SECRET:-}
+      VNPAY_RETURN_URL: ${VNPAY_RETURN_URL:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+      JWT_SECRET: ${JWT_SECRET:?Run setup-local.ps1 first}
     depends_on:
       db:
         condition: service_healthy
@@ -22,8 +29,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: perfumestore
-    ports:
-      - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:

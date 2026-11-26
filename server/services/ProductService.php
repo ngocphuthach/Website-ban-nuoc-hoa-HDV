@@ -7,11 +7,18 @@ class ProductService {
         $this->productRepo = $productRepo;
     }
 
-    // Lấy danh sách sản phẩm kèm thông tin phân trang
+    // Lấy danh sách sản phẩm kèm thông tin phân trang và lọc giá
     public function getAll(array $params): array {
         $page = max(1, (int)($params['page'] ?? 1));
         $limit = max(1, min(100, (int)($params['limit'] ?? 12)));
         $offset = ($page - 1) * $limit;
+
+        $minPrice = $this->parseOptionalPrice($params['minPrice'] ?? null, 'Giá thấp nhất');
+        $maxPrice = $this->parseOptionalPrice($params['maxPrice'] ?? null, 'Giá cao nhất');
+
+        if ($minPrice !== null && $maxPrice !== null && $minPrice > $maxPrice) {
+            throw new InvalidArgumentException('Giá thấp nhất không được lớn hơn giá cao nhất.');
+        }
 
         $filters = [
             'brand' => $params['brand'] ?? '',
@@ -20,6 +27,8 @@ class ProductService {
             'isFeatured' => $params['isFeatured'] ?? '',
             'isNew' => $params['isNew'] ?? '',
             'isSale' => !empty($params['isSale']),
+            'minPrice' => $minPrice,
+            'maxPrice' => $maxPrice,
             'sort' => $params['sort'] ?? '',
             'limit' => $limit,
             'offset' => $offset,
@@ -27,14 +36,31 @@ class ProductService {
 
         $items = $this->productRepo->getAll($filters);
         $total = $this->productRepo->countAll($filters);
+        $priceBounds = $this->productRepo->getPriceBounds();
 
         return [
             'items' => $items,
             'total' => $total,
             'page' => $page,
             'limit' => $limit,
-            'totalPages' => (int)ceil($total / $limit),
+            'totalPages' => max(1, (int)ceil($total / $limit)),
+            'priceRange' => $priceBounds,
         ];
+    }
+
+    // Kiểm tra và chuẩn hóa tham số giá tùy chọn (cho phép bỏ trống)
+    private function parseOptionalPrice($raw, string $label): ?float {
+        if ($raw === null || trim((string)$raw) === '') {
+            return null;
+        }
+        if (!is_numeric($raw)) {
+            throw new InvalidArgumentException("{$label} không hợp lệ.");
+        }
+        $val = (float)$raw;
+        if ($val < 0) {
+            throw new InvalidArgumentException("{$label} không được là số âm.");
+        }
+        return $val;
     }
 
     // Lấy chi tiết 1 sản phẩm
@@ -59,6 +85,7 @@ class ProductService {
     // Cập nhật sản phẩm
     public function update(int $id, array $data): array {
         $this->getById($id);
+        if (!array_key_exists('images', $data)) $data['images'] = $this->getById($id)['images'];
         $validated = $this->validateProduct($data);
         $existing = $this->productRepo->findByCode($validated['code']);
         if ($existing && (int)$existing['id'] !== $id) {
@@ -90,10 +117,21 @@ class ProductService {
             throw new InvalidArgumentException('Vui lòng thêm ít nhất 1 dung tích (ml) cho sản phẩm.');
         }
 
+        $images = $data['images'] ?? [];
+        if (!is_array($images) || count($images) > 5) throw new InvalidArgumentException('Tối đa 5 ảnh sản phẩm.');
+        $primary = trim((string)($data['image'] ?? ''));
+        $images = array_values(array_unique(array_filter(array_merge([$primary], $images))));
+        if (count($images) > 5) throw new InvalidArgumentException('Tối đa 5 ảnh sản phẩm.');
+        foreach ($images as $url) {
+            if (!is_string($url) || strlen($url) > 1024 || !preg_match('~^pic/[a-zA-Z0-9_./ -]+\.(jpg|jpeg|png|webp|gif)$~i', $url) || str_contains($url, '..')) {
+                throw new InvalidArgumentException('Ảnh phải là đường dẫn ảnh nội bộ hợp lệ.');
+            }
+        }
         return [
+            'images' => $images,
             'code' => $code,
             'name' => $name,
-            'image' => trim((string)($data['image'] ?? '')),
+            'image' => $images[0] ?? '',
             'shortDesc' => trim((string)($data['shortDesc'] ?? '')),
             'type' => $type,
             'brand' => $brand,

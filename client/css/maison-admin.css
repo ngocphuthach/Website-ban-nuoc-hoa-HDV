@@ -1,0 +1,22 @@
+.maison-admin{--bg:#121418;--surface:#1b1e24;--surface2:#262a32;--text:#f3f1ed;--text-muted:#aab0bb;--gold:#d7b982;--gold-light:#e9d8b5;--border:#ffffff18;background:#121418;font-family:var(--font-sans)}
+.maison-admin .admin-sidebar{background:#17191d;border-right:1px solid #ffffff15;padding:24px 16px}
+.maison-admin .admin-brand{font-family:var(--font-display);font-weight:600;font-size:24px;line-height:1.15;letter-spacing:.01em;color:#eee4d4;text-align:left;margin-bottom:28px}
+.maison-admin .admin-brand small{display:block;font-family:var(--font-sans);font-size:11px;font-weight:500;line-height:1.6;letter-spacing:.06em;color:#aab0bb}
+.maison-admin .admin-nav-btn{border:0;border-radius:6px;padding:12px 12px;margin-bottom:6px;font-family:var(--font-sans);font-size:14px;font-weight:500;letter-spacing:normal}
+.maison-admin .admin-nav-btn.active{background:#d7b982;color:#191714}
+.maison-admin .admin-main{background:#121418;padding:clamp(18px,3vw,40px);font-family:var(--font-sans);font-size:14.5px;line-height:1.6}
+.maison-admin .admin-topbar{margin-bottom:28px;align-items:end}
+.maison-admin .admin-eyebrow{color:#d7b982;font-size:12px;font-weight:500;letter-spacing:.04em}
+.maison-admin #admin-page-title{font-family:var(--font-display);font-weight:500;font-size:clamp(26px,2.8vw,36px);line-height:1.25;letter-spacing:-.01em;margin-top:6px}
+.maison-admin .kpi-grid{gap:18px}
+.maison-admin .kpi-card{border:1px solid #ffffff15;background:#1c1f25;border-radius:8px;padding:22px;min-height:132px}
+.maison-admin .kpi-card:before{left:auto;right:18px;top:18px;bottom:auto;width:8px;height:8px;background:#d7b982;border-radius:50%}
+.maison-admin .kpi-card span{font-size:14px;font-weight:500}
+.maison-admin .kpi-card h3{font-family:var(--font-sans);font-weight:600;font-size:clamp(20px,2.2vw,28px);line-height:1.25;font-variant-numeric:tabular-nums;color:#f2e2c3;margin-top:12px;letter-spacing:normal}
+.maison-admin .chart-card,.maison-admin .data-table{background:#1c1f25;border:1px solid #ffffff15;border-radius:8px;box-shadow:none}
+.maison-admin .chart-card h3{font-family:var(--font-sans);font-weight:600;font-size:16px;color:#e9e5dd}
+.maison-admin .data-table th{color:#d7b982;background:#242730;font-size:13px;font-weight:600;text-transform:none;letter-spacing:normal}
+.maison-admin .data-table td{font-size:14px;font-variant-numeric:tabular-nums}
+.maison-admin .btn-gold{border-radius:6px;background:#d7b982;box-shadow:none;text-transform:none;font-size:14px}
+.maison-admin .admin-tab{overflow-x:auto}
+@media(max-width:720px){.maison-admin .admin-sidebar{padding:12px}.maison-admin .admin-brand{font-size:20px}.maison-admin .admin-brand small{display:none}}

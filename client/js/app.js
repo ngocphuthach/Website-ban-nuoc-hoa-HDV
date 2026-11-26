@@ -10,6 +10,58 @@ class App {
         this.ordersPage = new OrdersPage();
         this.quickModalProduct = null;
         this.quickSelectedSize = null;
+        this.pendingRedirectHash = null;
+        this.isSubmittingLogin = false;
+        this.isSubmittingRegister = false;
+    }
+
+    // Chỉ chấp nhận các đường dẫn nội bộ hợp lệ sau khi đăng nhập
+    isSafeInternalHash(hash) {
+        const allowed = new Set([
+            '#trang-chu', '#trang-san-pham', '#trang-thuong-hieu',
+            '#trang-gio-hang', '#trang-thanh-toan', '#trang-ho-so', '#trang-lich-su'
+        ]);
+        return typeof hash === 'string' && (allowed.has(hash) || /^#trang-chi-tiet\?id=\d+$/.test(hash));
+    }
+
+    togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        const show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        const icon = btn?.querySelector('i');
+        if (icon) {
+            icon.className = show ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+        }
+        btn?.setAttribute('aria-label', show ? 'Ẩn mật khẩu' : 'Hiển thị mật khẩu');
+    }
+
+    setFieldError(fieldId, msg) {
+        const input = document.getElementById(fieldId);
+        const errEl = document.getElementById(`${fieldId}-error`);
+        if (input) input.classList.toggle('input-invalid', !!msg);
+        if (errEl) errEl.textContent = msg || '';
+    }
+
+    clearFormErrors(ids) {
+        ids.forEach(id => this.setFieldError(id, ''));
+    }
+
+    updatePasswordStrength(password) {
+        const box = document.getElementById('reg-password-strength');
+        const label = document.getElementById('reg-strength-text');
+        if (!box || !label) return;
+
+        let score = 0;
+        if (password.length >= 8) score++;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+        if (/\d/.test(password)) score++;
+        if (/[^A-Za-z0-9]/.test(password) || password.length >= 12) score++;
+
+        if (!password) score = 0;
+        box.dataset.level = String(score);
+        const texts = ['', 'Yếu (cần ít nhất 8 ký tự, chữ hoa, chữ thường, số)', 'Trung bình', 'Mạnh', 'Rất mạnh'];
+        label.textContent = texts[score] || '';
     }
 
     init() {
@@ -41,38 +93,149 @@ class App {
             document.querySelector('.nav-links')?.classList.toggle('open');
         });
 
+        // Chỉ báo độ mạnh mật khẩu theo thời gian thực
+        const regPassInput = document.getElementById('reg-password');
+        regPassInput?.addEventListener('input', (e) => {
+            this.updatePasswordStrength(e.target.value);
+            this.setFieldError('reg-password', '');
+        });
+
+        // Xóa thông báo lỗi khi người dùng chỉnh sửa input
+        ['login-email', 'login-password', 'reg-fullname', 'reg-email', 'reg-phone', 'reg-address', 'reg-confirm-password'].forEach(id => {
+            document.getElementById(id)?.addEventListener('input', () => this.setFieldError(id, ''));
+        });
+
         // Form đăng nhập
         document.getElementById('login-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (this.isSubmittingLogin) return;
+
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
+            this.clearFormErrors(['login-email', 'login-password']);
+
+            let hasError = false;
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                this.setFieldError('login-email', 'Vui lòng nhập email hợp lệ.');
+                hasError = true;
+            }
+            if (!password) {
+                this.setFieldError('login-password', 'Vui lòng nhập mật khẩu.');
+                hasError = true;
+            }
+            if (hasError) return;
+
+            const btn = document.getElementById('login-submit-btn');
+            this.isSubmittingLogin = true;
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang đăng nhập...';
+            }
+
             try {
                 const res = await this.authService.login(email, password);
                 toast.success(`Chào mừng ${res.user.fullName}!`);
                 this.updateNavbar();
-                window.location.hash = res.user.role === 'admin' ? '#trang-chu' : '#trang-chu';
+                document.getElementById('login-password').value = '';
+
+                if (res.user.role === 'admin') {
+                    window.location.href = 'admin.html';
+                    return;
+                }
+
+                const target = this.isSafeInternalHash(this.pendingRedirectHash)
+                    ? this.pendingRedirectHash
+                    : '#trang-chu';
+                this.pendingRedirectHash = null;
+                window.location.hash = target;
             } catch (err) {
+                this.setFieldError('login-password', err.message);
                 toast.error(err.message);
+            } finally {
+                this.isSubmittingLogin = false;
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Đăng nhập';
+                }
             }
         });
 
-        // Form đăng ký
+        // Form đăng ký (tách biệt hoàn toàn: tạo tài khoản xong chuyển sang Đăng nhập, KHÔNG tự đăng nhập)
         document.getElementById('register-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const payload = {
-                fullName: document.getElementById('reg-fullname').value.trim(),
-                email: document.getElementById('reg-email').value.trim(),
-                phone: document.getElementById('reg-phone').value.trim(),
-                address: document.getElementById('reg-address').value.trim(),
-                password: document.getElementById('reg-password').value
-            };
+            if (this.isSubmittingRegister) return;
+
+            const fullName = document.getElementById('reg-fullname').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const address = document.getElementById('reg-address').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const confirmPassword = document.getElementById('reg-confirm-password').value;
+
+            this.clearFormErrors(['reg-fullname', 'reg-email', 'reg-phone', 'reg-password', 'reg-confirm-password']);
+
+            let hasError = false;
+            if (fullName.length < 2) {
+                this.setFieldError('reg-fullname', 'Họ và tên phải có ít nhất 2 ký tự.');
+                hasError = true;
+            }
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                this.setFieldError('reg-email', 'Email không hợp lệ.');
+                hasError = true;
+            }
+            if (phone && !/^[0-9+\-\s]{8,20}$/.test(phone)) {
+                this.setFieldError('reg-phone', 'Số điện thoại không hợp lệ.');
+                hasError = true;
+            }
+            if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
+                this.setFieldError('reg-password', 'Mật khẩu cần tối thiểu 8 ký tự, gồm chữ hoa, chữ thường và chữ số.');
+                hasError = true;
+            }
+            if (confirmPassword !== password || !confirmPassword) {
+                this.setFieldError('reg-confirm-password', 'Mật khẩu xác nhận không khớp.');
+                hasError = true;
+            }
+            if (hasError) return;
+
+            const btn = document.getElementById('register-submit-btn');
+            this.isSubmittingRegister = true;
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang tạo tài khoản...';
+            }
+
             try {
-                await this.authService.register(payload);
-                toast.success('Đăng ký thành công!');
+                await this.authService.register({ fullName, email, phone, address, password, confirmPassword });
+
+                // Tuyệt đối không lưu phiên hay mật khẩu; chỉ điền sẵn email ở form Đăng nhập
+                this.authService.clearLocalSession();
                 this.updateNavbar();
-                window.location.hash = '#trang-chu';
+
+                document.getElementById('register-form')?.reset();
+                this.updatePasswordStrength('');
+
+                const loginEmailEl = document.getElementById('login-email');
+                const loginPassEl = document.getElementById('login-password');
+                if (loginEmailEl) loginEmailEl.value = email;
+                if (loginPassEl) loginPassEl.value = '';
+
+                toast.success('Đăng ký tài khoản thành công! Vui lòng đăng nhập để tiếp tục.');
+                window.location.hash = '#trang-dang-nhap';
+                setTimeout(() => loginPassEl?.focus(), 120);
             } catch (err) {
-                toast.error(err.message);
+                const msg = err.message || 'Đăng ký thất bại.';
+                if (msg.toLowerCase().includes('email')) {
+                    this.setFieldError('reg-email', msg);
+                } else {
+                    this.setFieldError('reg-password', msg);
+                }
+                toast.error(msg);
+            } finally {
+                this.isSubmittingRegister = false;
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Đăng ký tài khoản';
+                }
             }
         });
 
@@ -97,6 +260,15 @@ class App {
         const [sectionPart, queryPart] = hash.slice(1).split('?');
         const sectionId = sectionPart || 'trang-chu';
         const params = new URLSearchParams(queryPart || '');
+
+        // Bảo vệ các trang yêu cầu đăng nhập
+        const protectedSections = new Set(['trang-thanh-toan', 'trang-ho-so', 'trang-lich-su']);
+        if (protectedSections.has(sectionId) && !this.authService.isLoggedIn()) {
+            this.pendingRedirectHash = hash;
+            toast.warning('Vui lòng đăng nhập để tiếp tục.');
+            window.location.hash = '#trang-dang-nhap';
+            return;
+        }
 
         this.showSection(sectionId);
         document.querySelector('.nav-links')?.classList.remove('open');
@@ -205,7 +377,7 @@ class App {
             <div class="user-dropdown">
                 <button class="user-trigger">
                     <i class="fa-regular fa-user"></i>
-                    <span>${user.fullName}</span>
+                    <span>${escapeHtml(user.fullName)}</span>
                 </button>
                 <div class="user-dropdown-menu">
                     <a href="#trang-ho-so"><i class="fa-regular fa-id-card"></i> Hồ sơ cá nhân</a>
@@ -217,11 +389,18 @@ class App {
         `;
     }
 
-    logout() {
-        this.authService.logout();
+    async logout() {
+        await this.authService.logout();
+        this.pendingRedirectHash = null;
         this.updateNavbar();
-        toast.info('Đã đăng xuất.');
-        window.location.hash = '#trang-chu';
+        toast.info('Đã đăng xuất tài khoản.');
+
+        const protectedHashes = ['#trang-thanh-toan', '#trang-ho-so', '#trang-lich-su'];
+        if (protectedHashes.includes(window.location.hash)) {
+            window.location.hash = '#trang-dang-nhap';
+        } else {
+            window.location.hash = '#trang-chu';
+        }
     }
 }
 

@@ -25,6 +25,9 @@ require_once __DIR__ . '/services/ProductService.php';
 require_once __DIR__ . '/services/BrandService.php';
 require_once __DIR__ . '/services/CategoryService.php';
 require_once __DIR__ . '/services/OrderService.php';
+require_once __DIR__ . '/services/NotificationService.php';
+require_once __DIR__ . '/services/StoreExtras.php';
+require_once __DIR__ . '/services/PaymentService.php';
 require_once __DIR__ . '/services/UserService.php';
 require_once __DIR__ . '/services/ReportService.php';
 
@@ -99,11 +102,29 @@ try {
         Response::success(['status' => 'running', 'service' => 'PerfumeStore SOA API']);
     }
 
+    elseif ($method==='GET' && $route==='/payments/config') { Response::success(['enabled'=>PaymentService::enabled()]); }
+    elseif ($method==='GET' && $route==='/payments/ipn') { Response::json((new PaymentService($db))->ipn($_GET)); }
+    elseif ($method==='POST' && preg_match('#^/payments/(\d+)/start$#',$route,$m)) { $u=AuthMiddleware::requireUser($config); Response::success((new PaymentService($db))->start((int)$m[1],(int)$u['id'])); }
+    elseif ($method === 'GET' && $route === '/recommendations') {
+        Response::success((new StoreExtras($db))->recommend(max(0,min(100000000,(int)($_GET['budget']??100000000))),substr((string)($_GET['type']??''),0,50),substr((string)($_GET['search']??''),0,100)));
+    } elseif (preg_match('#^/products/(\d+)/reviews$#',$route,$m) && in_array($method,['GET','POST'])) {
+        $extras=new StoreExtras($db); $id=(int)$m[1];
+        if ($method==='GET') Response::success($extras->reviews($id));
+        $user=AuthMiddleware::requireUser($config); $extras->review($id,(int)$user['id'],$body); Response::success(null,'Đã lưu đánh giá.');
+    } elseif ($method==='GET' && $route==='/favorites') {
+        $user=AuthMiddleware::requireUser($config); Response::success((new StoreExtras($db))->favorites((int)$user['id']));
+    } elseif (preg_match('#^/favorites/(\d+)$#',$route,$m) && in_array($method,['PUT','DELETE'])) {
+        $user=AuthMiddleware::requireUser($config); (new StoreExtras($db))->favorite((int)$user['id'],(int)$m[1],$method==='PUT'); Response::success();
+    } elseif ($method==='GET' && $route==='/notifications') {
+        AuthMiddleware::requireAdmin($config); Response::success($db->query('SELECT * FROM NotificationOutbox ORDER BY id DESC LIMIT 100')->fetchAll());
+    }
     // --- AUTH ---
     elseif ($method === 'POST' && $route === '/auth/register') {
         $authController->register($body);
     } elseif ($method === 'POST' && $route === '/auth/login') {
         $authController->login($body);
+    } elseif ($method === 'POST' && $route === '/auth/logout') {
+        $authController->logout();
     } elseif ($method === 'GET' && $route === '/auth/me') {
         $user = AuthMiddleware::requireUser($config);
         $authController->me($user);
@@ -205,9 +226,11 @@ try {
     }
 } catch (InvalidArgumentException $e) {
     Response::error($e->getMessage(), 400);
+} catch (PDOException $e) {
+    error_log($e->getMessage()); Response::error('Lỗi cơ sở dữ liệu.',500);
 } catch (RuntimeException $e) {
     $code = $e->getCode();
     Response::error($e->getMessage(), ($code >= 400 && $code < 600) ? $code : 400);
 } catch (Throwable $e) {
-    Response::error('Lỗi hệ thống: ' . $e->getMessage(), 500);
+    error_log($e->getMessage()); Response::error('Lỗi hệ thống.', 500);
 }

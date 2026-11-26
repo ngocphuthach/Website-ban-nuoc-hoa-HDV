@@ -124,11 +124,22 @@ class OrderRepository {
             ];
         }
 
+        // Lấy trạng thái thanh toán (VNPay/Payments) bằng 1 truy vấn duy nhất thay cho N+1 query
+        $payStmt = $this->db->prepare(
+            "SELECT orderId, state FROM Payments WHERE orderId IN ({$placeholders})"
+        );
+        $payStmt->execute($ids);
+        $payMap = [];
+        foreach ($payStmt->fetchAll() as $pRow) {
+            $payMap[(int)$pRow['orderId']] = $pRow['state'];
+        }
+
         foreach ($orders as &$order) {
             $order['id'] = (int)$order['id'];
             $order['userId'] = (int)$order['userId'];
             $order['total'] = (float)$order['total'];
             $order['items'] = $itemMap[$order['id']] ?? [];
+            $order['paymentStatus'] = $payMap[$order['id']] ?? 'unverified';
         }
         return $orders;
     }

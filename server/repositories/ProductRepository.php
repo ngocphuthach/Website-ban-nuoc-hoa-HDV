@@ -38,6 +38,22 @@ class ProductRepository {
             $conditions[] = 'p.discount > 0';
         }
 
+        // Lọc theo khoảng giá trên giá bán thực tế sau giảm giá của từng dung tích
+        $minPrice = $filters['minPrice'] ?? null;
+        $maxPrice = $filters['maxPrice'] ?? null;
+        if ($minPrice !== null || $maxPrice !== null) {
+            $sizeConds = ['ps.productId = p.id'];
+            if ($minPrice !== null) {
+                $sizeConds[] = 'ROUND(ps.price * (100 - p.discount) / 100) >= ?';
+                $params[] = $minPrice;
+            }
+            if ($maxPrice !== null) {
+                $sizeConds[] = 'ROUND(ps.price * (100 - p.discount) / 100) <= ?';
+                $params[] = $maxPrice;
+            }
+            $conditions[] = 'EXISTS (SELECT 1 FROM ProductSizes ps WHERE ' . implode(' AND ', $sizeConds) . ')';
+        }
+
         return $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
     }
 
@@ -46,15 +62,36 @@ class ProductRepository {
         $params = [];
         $where = $this->buildWhere($filters, $params);
 
-        $limit = max(1, (int)($filters['limit'] ?? 50));
+        $limit = min(100, max(1, (int)($filters['limit'] ?? 50)));
         $offset = max(0, (int)($filters['offset'] ?? 0));
 
-        // Hỗ trợ sắp xếp cơ bản
+        $minPrice = $filters['minPrice'] ?? null;
+        $maxPrice = $filters['maxPrice'] ?? null;
+        $orderParams = [];
+
+        // Hỗ trợ sắp xếp theo giá (ưu tiên giá dung tích khớp bộ lọc nếu đang lọc giá)
         $orderBy = 'p.id DESC';
-        if (!empty($filters['sort'])) {
-            if ($filters['sort'] === 'name_asc') $orderBy = 'p.name ASC';
-            elseif ($filters['sort'] === 'discount_desc') $orderBy = 'p.discount DESC, p.id DESC';
-            elseif ($filters['sort'] === 'newest') $orderBy = 'p.isNew DESC, p.id DESC';
+        $sort = $filters['sort'] ?? '';
+        if ($sort === 'name_asc') {
+            $orderBy = 'p.name ASC';
+        } elseif ($sort === 'discount_desc') {
+            $orderBy = 'p.discount DESC, p.id DESC';
+        } elseif ($sort === 'newest') {
+            $orderBy = 'p.isNew DESC, p.id DESC';
+        } elseif ($sort === 'price_asc' || $sort === 'price_desc') {
+            $agg = $sort === 'price_asc' ? 'MIN' : 'MAX';
+            $dir = $sort === 'price_asc' ? 'ASC' : 'DESC';
+            $subConds = ['ps2.productId = p.id'];
+            if ($minPrice !== null) {
+                $subConds[] = 'ROUND(ps2.price * (100 - p.discount) / 100) >= ?';
+                $orderParams[] = $minPrice;
+            }
+            if ($maxPrice !== null) {
+                $subConds[] = 'ROUND(ps2.price * (100 - p.discount) / 100) <= ?';
+                $orderParams[] = $maxPrice;
+            }
+            $subWhere = implode(' AND ', $subConds);
+            $orderBy = "(SELECT {$agg}(ROUND(ps2.price * (100 - p.discount) / 100)) FROM ProductSizes ps2 WHERE {$subWhere}) {$dir}, p.id DESC";
         }
 
         $sql = "SELECT p.*, b.name AS brandName, c.name AS categoryName
@@ -66,10 +103,24 @@ class ProductRepository {
                 LIMIT {$limit} OFFSET {$offset}";
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute($params);
+        $stmt->execute(array_merge($params, $orderParams));
         $rows = $stmt->fetchAll();
 
         return $this->attachSizes($rows);
+    }
+
+    // Lấy khoảng giá thấp nhất & cao nhất thực tế trong Database (sau giảm giá)
+    public function getPriceBounds(): array {
+        $sql = 'SELECT
+                    COALESCE(MIN(ROUND(ps.price * (100 - p.discount) / 100)), 0) AS minPrice,
+                    COALESCE(MAX(ROUND(ps.price * (100 - p.discount) / 100)), 0) AS maxPrice
+                FROM ProductSizes ps
+                INNER JOIN Products p ON p.id = ps.productId';
+        $row = $this->db->query($sql)->fetch();
+        return [
+            'min' => (int)($row['minPrice'] ?? 0),
+            'max' => (int)($row['maxPrice'] ?? 0),
+        ];
     }
 
     // Đếm tổng số sản phẩm thỏa điều kiện lọc
@@ -128,6 +179,7 @@ class ProductRepository {
         if (!empty($data['sizes']) && is_array($data['sizes'])) {
             $this->saveSizes($productId, $data['sizes']);
         }
+        $this->saveImages($productId, $data['images'] ?? []);
         return $productId;
     }
 
@@ -154,7 +206,14 @@ class ProductRepository {
         if (isset($data['sizes']) && is_array($data['sizes'])) {
             $this->saveSizes($id, $data['sizes']);
         }
+        if (isset($data['images'])) $this->saveImages($id, $data['images']);
         return $ok;
+    }
+
+    private function saveImages(int $id, array $images): void {
+        $this->db->prepare('DELETE FROM ProductImages WHERE productId = ?')->execute([$id]);
+        $stmt = $this->db->prepare('INSERT INTO ProductImages (productId, imageUrl, sortOrder) VALUES (?, ?, ?)');
+        foreach ($images as $i => $url) $stmt->execute([$id, $url, $i]);
     }
 
     // Xóa sản phẩm (bảng ProductSizes có ON DELETE CASCADE nhưng xóa rõ ràng cho an toàn)
@@ -191,9 +250,10 @@ class ProductRepository {
     // Trừ tồn kho khi tạo đơn hàng
     public function decreaseStock(int $productId, int $ml, int $qty): void {
         $stmt = $this->db->prepare(
-            'UPDATE ProductSizes SET stock = GREATEST(0, stock - ?) WHERE productId = ? AND ml = ?'
+            'UPDATE ProductSizes SET stock = stock - ? WHERE productId = ? AND ml = ? AND stock >= ?'
         );
-        $stmt->execute([$qty, $productId, $ml]);
+        $stmt->execute([$qty, $productId, $ml, $qty]);
+        if ($stmt->rowCount() !== 1) throw new RuntimeException('Không đủ tồn kho.', 409);
     }
 
     // Cộng lại tồn kho khi hủy đơn hàng
@@ -227,7 +287,12 @@ class ProductRepository {
             ];
         }
 
+        $stmt = $this->db->prepare("SELECT productId, imageUrl FROM ProductImages WHERE productId IN ({$placeholders}) ORDER BY sortOrder, id");
+        $stmt->execute($ids);
+        $imageMap = [];
+        foreach ($stmt->fetchAll() as $row) $imageMap[(int)$row['productId']][] = $row['imageUrl'];
         foreach ($products as &$p) {
+            $p['images'] = array_values(array_unique(array_filter(array_merge([$p['image']], $imageMap[(int)$p['id']] ?? []))));
             $p['id'] = (int)$p['id'];
             $p['discount'] = (int)$p['discount'];
             $p['isNew'] = (bool)$p['isNew'];

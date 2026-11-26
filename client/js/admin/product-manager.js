@@ -11,6 +11,7 @@ class ProductManager {
         this.searchQuery = '';
         this.searchTimer = null;
         this.selectedFile = null;
+        this.extraImages = [];
     }
 
     async init() {
@@ -140,6 +141,18 @@ class ProductManager {
         }
     }
 
+    renderGallery() {
+        const root=document.getElementById('gallery-admin-list'); root.replaceChildren();
+        this.extraImages.forEach((item,i)=>{
+            const row=document.createElement('div'); row.className='gallery-admin-item';
+            const img=document.createElement('img'); img.src=item instanceof File?URL.createObjectURL(item):galleryUrl(item); if(item instanceof File) img.onload=()=>URL.revokeObjectURL(img.src); img.alt='Ảnh bổ sung '+(i+1); row.append(img);
+            [['↑',-1],['↓',1],['×',0]].forEach(([label,delta])=>{const b=document.createElement('button');b.type='button';b.className='btn-outline btn-sm';b.textContent=label;b.setAttribute('aria-label',delta===0?'Xóa ảnh':delta<0?'Đưa lên':'Đưa xuống');b.onclick=()=>{if(!delta)this.extraImages.splice(i,1);else if(i+delta>=0&&i+delta<this.extraImages.length)[this.extraImages[i],this.extraImages[i+delta]]=[this.extraImages[i+delta],this.extraImages[i]];this.renderGallery();};row.append(b);}); root.append(row);
+        });
+    }
+    setupGallery(images=[]) {
+        this.extraImages=images.slice(0,4); const input=document.getElementById('gallery-files'); input.value='';
+        input.onchange=()=>{const files=[...input.files];if(files.length+this.extraImages.length>4){toast.error('Tối đa 4 ảnh bổ sung.');input.value='';return;}this.extraImages.push(...files);input.value='';this.renderGallery();}; this.renderGallery();
+    }
     openAddModal() {
         this.editingId = null;
         this.selectedFile = null;
@@ -147,6 +160,7 @@ class ProductManager {
         document.getElementById('admin-product-form').reset();
         document.getElementById('admin-prod-image').value = '';
         this.setPreview('');
+        this.setupGallery();
         this.sizes = [{ ml: 100, price: 2500000, stock: 20 }];
         this.renderSizesInModal();
         document.getElementById('admin-product-modal').classList.add('active');
@@ -166,6 +180,7 @@ class ProductManager {
             document.getElementById('admin-prod-image').value = p.image || '';
             document.getElementById('admin-prod-file').value = '';
             this.setPreview(p.image || '');
+            this.setupGallery(productGalleryImages(p).filter(x=>x!==p.image));
             document.getElementById('admin-prod-desc').value = p.shortDesc || '';
             document.getElementById('admin-prod-new').checked = !!p.isNew;
             document.getElementById('admin-prod-featured').checked = !!p.isFeatured;
@@ -220,7 +235,10 @@ class ProductManager {
                 imagePath = uploaded.path;
             }
 
+            const images = [];
+            for (const item of this.extraImages) images.push(item instanceof File ? (await this.productService.uploadImage(item)).path : item);
             const payload = {
+                images,
                 code: document.getElementById('admin-prod-code').value.trim(),
                 name: document.getElementById('admin-prod-name').value.trim(),
                 brand: document.getElementById('admin-prod-brand').value,

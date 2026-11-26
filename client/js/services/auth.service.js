@@ -1,14 +1,17 @@
-// Service xử lý đăng nhập, đăng ký và phiên người dùng
+// Service xử lý đăng nhập, đăng ký (tách biệt hoàn toàn) và phiên người dùng
 class AuthService extends ApiService {
+    // Đăng ký tài khoản mới: CHỈ tạo tài khoản, tuyệt đối không lưu token hay tự động đăng nhập
     async register(data) {
         const res = await this.post('/auth/register', data);
-        this.saveSession(res.token, res.user);
         return res;
     }
 
+    // Đăng nhập: chỉ lưu phiên khi Server xác thực thành công và cấp JWT Token
     async login(email, password) {
         const res = await this.post('/auth/login', { email, password });
-        this.saveSession(res.token, res.user);
+        if (res && res.token && res.user) {
+            this.saveSession(res.token, res.user);
+        }
         return res;
     }
 
@@ -23,9 +26,23 @@ class AuthService extends ApiService {
         localStorage.setItem('perfume_user', JSON.stringify(user));
     }
 
-    logout() {
+    clearLocalSession() {
         localStorage.removeItem('perfume_token');
         localStorage.removeItem('perfume_user');
+        sessionStorage.removeItem('perfume_token');
+        sessionStorage.removeItem('perfume_user');
+    }
+
+    async logout() {
+        const token = this.getToken();
+        if (token) {
+            try {
+                await this.post('/auth/logout', {});
+            } catch (e) {
+                // Bỏ qua lỗi mạng khi thu hồi token, vẫn xóa phiên cục bộ
+            }
+        }
+        this.clearLocalSession();
     }
 
     getCurrentUser() {
@@ -47,6 +64,6 @@ class AuthService extends ApiService {
 
     isAdmin() {
         const user = this.getCurrentUser();
-        return !!user && user.role === 'admin';
+        return this.isLoggedIn() && !!user && user.role === 'admin';
     }
 }

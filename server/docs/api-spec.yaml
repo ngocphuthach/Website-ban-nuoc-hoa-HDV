@@ -1,11 +1,12 @@
 openapi: 3.0.3
 info:
   title: PerfumeStore SOA RESTful API
-  version: 1.0.0
-  description: Tài liệu mô tả các dịch vụ RESTful API cho hệ thống bán nước hoa PerfumeStore theo kiến trúc hướng dịch vụ (SOA).
+  version: 2.1.0
+  description: Tài liệu mô tả các dịch vụ RESTful API cho hệ thống bán nước hoa PerfumeStore
+    theo kiến trúc hướng dịch vụ (SOA).
 servers:
-  - url: http://localhost/HDV/server
-    description: Local Development Server
+- url: ..
+  description: Same-origin API
 components:
   securitySchemes:
     BearerAuth:
@@ -21,82 +22,153 @@ paths:
           description: Server đang hoạt động bình thường
   /auth/register:
     post:
-      summary: Đăng ký tài khoản mới
+      summary: Đăng ký tài khoản mới (không tự động đăng nhập, không cấp JWT Token)
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [fullName, email, password]
+              required:
+              - fullName
+              - email
+              - password
+              - confirmPassword
               properties:
-                fullName: { type: string }
-                email: { type: string, format: email }
-                password: { type: string, minLength: 6 }
-                phone: { type: string }
-                address: { type: string }
+                fullName:
+                  type: string
+                  minLength: 2
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                  description: Tối thiểu 8 ký tự, gồm chữ hoa, chữ thường và chữ số
+                confirmPassword:
+                  type: string
+                phone:
+                  type: string
+                address:
+                  type: string
       responses:
         '201':
-          description: Đăng ký thành công, trả về JWT token và thông tin user
+          description: Đăng ký thành công, trả về thông tin user (chỉ role user, không cấp token)
+        '400':
+          description: Dữ liệu không hợp lệ, mật khẩu chưa đủ mạnh, hoặc email đã tồn tại
   /auth/login:
     post:
-      summary: Đăng nhập hệ thống
+      summary: Đăng nhập hệ thống và cấp JWT Token (giới hạn tối đa 5 lần sai trong 15 phút)
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [email, password]
+              required:
+              - email
+              - password
               properties:
-                email: { type: string }
-                password: { type: string }
+                email:
+                  type: string
+                password:
+                  type: string
       responses:
         '200':
-          description: Đăng nhập thành công, trả về JWT token
+          description: Đăng nhập thành công, trả về JWT token và thông tin user
+        '401':
+          description: Email hoặc mật khẩu không chính xác
+        '429':
+          description: Quá số lần đăng nhập thất bại cho phép
+  /auth/logout:
+    post:
+      summary: Đăng xuất và thu hồi JWT Token hiện tại phía Server
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Đã đăng xuất tài khoản
   /auth/me:
     get:
       summary: Lấy thông tin người dùng đang đăng nhập
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       responses:
         '200':
           description: Thông tin tài khoản hiện tại
   /products:
     get:
-      summary: Lấy danh sách sản phẩm (hỗ trợ lọc & phân trang)
+      summary: Lấy danh sách sản phẩm (hỗ trợ lọc khoảng giá theo dung tích, sắp xếp & phân trang)
+      description: |
+        Trả về danh sách sản phẩm phân trang và `priceRange` (min/max thực tế từ DB).
+        Khi truyền `minPrice` và/hoặc `maxPrice`, hệ thống lọc dựa trên giá bán thực tế sau giảm giá
+        `ROUND(price * (100 - discount) / 100)` của từng phiên bản dung tích trong `ProductSizes`.
+        Chỉ cần có ít nhất 1 dung tích nằm trong khoảng giá thì sản phẩm sẽ được trả về (không trùng lặp).
+        Ví dụ: `GET /products?minPrice=500000&maxPrice=2000000&sort=price_asc`
       parameters:
-        - in: query
-          name: brand
-          schema: { type: string }
-        - in: query
-          name: type
-          schema: { type: string }
-        - in: query
-          name: search
-          schema: { type: string }
-        - in: query
-          name: isFeatured
-          schema: { type: integer }
-        - in: query
-          name: isSale
-          schema: { type: integer }
-        - in: query
-          name: isNew
-          schema: { type: integer }
-        - in: query
-          name: page
-          schema: { type: integer, default: 1 }
-        - in: query
-          name: limit
-          schema: { type: integer, default: 12 }
+      - in: query
+        name: brand
+        schema:
+          type: string
+      - in: query
+        name: type
+        schema:
+          type: string
+      - in: query
+        name: search
+        schema:
+          type: string
+      - in: query
+        name: minPrice
+        description: Giá thấp nhất (VNĐ, số không âm). Tính theo giá sau giảm của từng dung tích.
+        schema:
+          type: number
+          minimum: 0
+          example: 500000
+      - in: query
+        name: maxPrice
+        description: Giá cao nhất (VNĐ, số không âm >= minPrice). Tính theo giá sau giảm của từng dung tích.
+        schema:
+          type: number
+          minimum: 0
+          example: 2000000
+      - in: query
+        name: sort
+        description: Kiểu sắp xếp (newest, price_asc, price_desc, name_asc, discount_desc)
+        schema:
+          type: string
+          enum: [newest, price_asc, price_desc, name_asc, discount_desc]
+      - in: query
+        name: isFeatured
+        schema:
+          type: integer
+      - in: query
+        name: isSale
+        schema:
+          type: integer
+      - in: query
+        name: isNew
+        schema:
+          type: integer
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: 1
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 12
       responses:
         '200':
-          description: Danh sách sản phẩm kèm tổng số trang
+          description: Danh sách sản phẩm kèm tổng số trang và priceRange thực tế
+        '400':
+          description: Tham số minPrice/maxPrice không hợp lệ hoặc minPrice > maxPrice
     post:
       summary: Thêm sản phẩm mới (Admin)
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       responses:
         '201':
           description: Đã tạo sản phẩm
@@ -104,34 +176,37 @@ paths:
     get:
       summary: Xem chi tiết 1 sản phẩm kèm các dung tích
       parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer }
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
       responses:
         '200':
           description: Chi tiết sản phẩm
     put:
       summary: Cập nhật sản phẩm (Admin)
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer }
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
       responses:
         '200':
           description: Cập nhật thành công
     delete:
       summary: Xóa sản phẩm (Admin)
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer }
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
       responses:
         '200':
           description: Đã xóa sản phẩm
@@ -144,7 +219,7 @@ paths:
     post:
       summary: Thêm thương hiệu (Admin)
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       responses:
         '201':
           description: Đã thêm thương hiệu
@@ -157,7 +232,7 @@ paths:
     post:
       summary: Thêm phân loại (Admin)
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       responses:
         '201':
           description: Đã thêm phân loại
@@ -165,14 +240,14 @@ paths:
     get:
       summary: Lấy toàn bộ đơn hàng (Admin)
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       responses:
         '200':
           description: Danh sách đơn hàng
     post:
       summary: Tạo đơn hàng mới (User)
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       responses:
         '201':
           description: Đặt hàng thành công và trừ tồn kho
@@ -180,7 +255,7 @@ paths:
     get:
       summary: Lấy lịch sử đơn hàng của người dùng hiện tại
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       responses:
         '200':
           description: Danh sách đơn hàng cá nhân
@@ -188,12 +263,13 @@ paths:
     patch:
       summary: Cập nhật trạng thái đơn hàng (Admin)
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer }
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
       responses:
         '200':
           description: Cập nhật trạng thái thành công
@@ -201,12 +277,13 @@ paths:
     patch:
       summary: Khách hàng tự hủy đơn khi đang Chờ xác nhận
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       parameters:
-        - in: path
-          name: id
-          required: true
-          schema: { type: integer }
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
       responses:
         '200':
           description: Đã hủy đơn và hoàn lại tồn kho
@@ -214,7 +291,7 @@ paths:
     get:
       summary: Lấy danh sách người dùng (Admin)
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       responses:
         '200':
           description: Danh sách users
@@ -222,7 +299,7 @@ paths:
     put:
       summary: Cập nhật hồ sơ cá nhân
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       responses:
         '200':
           description: Cập nhật thành công
@@ -230,7 +307,150 @@ paths:
     get:
       summary: Thống kê doanh thu, đơn hàng, top sản phẩm bán chạy (Admin)
       security:
-        - BearerAuth: []
+      - BearerAuth: []
       responses:
         '200':
           description: Dữ liệu dashboard
+  /recommendations:
+    get:
+      summary: /recommendations GET
+      responses:
+        '200':
+          description: Thành công
+        '400':
+          description: Dữ liệu không hợp lệ
+      parameters:
+      - name: budget
+        in: query
+        schema:
+          type: integer
+      - name: type
+        in: query
+        schema:
+          type: string
+      - name: search
+        in: query
+        schema:
+          type: string
+  /products/{id}/reviews:
+    get:
+      summary: /products/{id}/reviews GET
+      responses:
+        '200':
+          description: Thành công
+        '400':
+          description: Dữ liệu không hợp lệ
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      summary: /products/{id}/reviews POST
+      responses:
+        '200':
+          description: Thành công
+        '400':
+          description: Dữ liệu không hợp lệ
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - rating
+              - comment
+              properties:
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                comment:
+                  type: string
+      security:
+      - BearerAuth: []
+  /favorites:
+    get:
+      summary: /favorites GET
+      responses:
+        '200':
+          description: Thành công
+        '400':
+          description: Dữ liệu không hợp lệ
+      security:
+      - BearerAuth: []
+  /favorites/{id}:
+    put:
+      summary: /favorites/{id} PUT
+      responses:
+        '200':
+          description: Thành công
+        '400':
+          description: Dữ liệu không hợp lệ
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - BearerAuth: []
+    delete:
+      summary: /favorites/{id} DELETE
+      responses:
+        '200':
+          description: Thành công
+        '400':
+          description: Dữ liệu không hợp lệ
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - BearerAuth: []
+  /notifications:
+    get:
+      summary: /notifications GET
+      responses:
+        '200':
+          description: Thành công
+        '400':
+          description: Dữ liệu không hợp lệ
+      security:
+      - BearerAuth: []
+  /payments/config:
+    get:
+      summary: /payments/config
+      responses:
+        '200':
+          description: Response
+  /payments/{id}/start:
+    post:
+      summary: /payments/{id}/start
+      responses:
+        '200':
+          description: Response
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      security:
+      - BearerAuth: []
+  /payments/ipn:
+    get:
+      summary: /payments/ipn
+      responses:
+        '200':
+          description: Response

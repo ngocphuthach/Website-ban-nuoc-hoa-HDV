@@ -1,0 +1,8 @@
+(()=>{
+ const $=id=>document.getElementById(id);const status=$('sig-admin-status');
+ function rows(id,items,render){const root=$(id);root.replaceChildren();if(!items.length){root.textContent='Chưa có dữ liệu.';return;}items.slice(0,5).forEach((item,i)=>{const row=document.createElement('div');row.className='sig-admin-row';const rank=document.createElement('span');rank.textContent=String(i+1).padStart(2,'0');const title=document.createElement('strong');const value=document.createElement('span');[title.textContent,value.textContent]=render(item);row.append(rank,title,value);root.append(row);});}
+ window.renderSignatureDashboard=data=>{if(!data){status.textContent='Không thể tải dữ liệu. Vui lòng thử lại.';$('sig-best-list').textContent=$('sig-stock-list').textContent='Không có dữ liệu';return;}rows('sig-best-list',data.topProducts||[],r=>[r.productName,`${r.totalSold} đã bán`]);rows('sig-stock-list',data.lowStock||[],r=>[`${r.name} · ${r.ml}ml`,`${r.stock} còn lại`]);status.textContent='Cập nhật lúc '+new Date().toLocaleTimeString('vi-VN');};
+ $('sig-refresh').onclick=async()=>{const b=$('sig-refresh');b.disabled=true;try{adminApp.dashboardData=await adminApp.dashboardPage.init();window.renderSignatureDashboard(adminApp.dashboardData);}finally{b.disabled=false;}};
+ $('sig-admin-menu').onclick=()=>{const collapsed=document.body.classList.toggle('sig-collapsed');$('sig-admin-menu').setAttribute('aria-expanded',String(!collapsed));};
+ $('sig-theme').onclick=()=>{const light=document.body.classList.toggle('sig-light');$('sig-theme').textContent=light?'◐ Giao diện tối':'◐ Giao diện sáng';$('sig-theme').setAttribute('aria-pressed',String(light));};
+})();

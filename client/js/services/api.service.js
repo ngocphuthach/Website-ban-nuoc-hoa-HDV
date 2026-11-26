@@ -6,9 +6,7 @@ class ApiService {
         if (path.includes('/client/')) {
             this.baseURL = path.split('/client/')[0] + '/server';
         } else {
-            this.baseURL = window.location.hostname === 'localhost'
-                ? 'http://localhost/HDV/server'
-                : '/server';
+            this.baseURL = '/server';
         }
     }
 
@@ -25,8 +23,8 @@ class ApiService {
         }).format(amount || 0);
     }
 
-    // Hàm gửi HTTP request chung
-    async request(method, endpoint, data = null) {
+    // Hàm gửi HTTP request chung (hỗ trợ AbortSignal để hủy request cũ khi lọc nhanh)
+    async request(method, endpoint, data = null, extraOptions = {}) {
         const headers = {
             'Content-Type': 'application/json'
         };
@@ -40,6 +38,9 @@ class ApiService {
             method: method.toUpperCase(),
             headers
         };
+        if (extraOptions.signal) {
+            options.signal = extraOptions.signal;
+        }
 
         if (data && ['POST', 'PUT', 'PATCH'].includes(options.method)) {
             options.body = JSON.stringify(data);
@@ -59,7 +60,7 @@ class ApiService {
         return result.data;
     }
 
-    async get(endpoint, params = {}) {
+    async get(endpoint, params = {}, extraOptions = {}) {
         const query = new URLSearchParams();
         Object.entries(params).forEach(([key, value]) => {
             if (value !== undefined && value !== null && value !== '') {
@@ -67,7 +68,7 @@ class ApiService {
             }
         });
         const qs = query.toString();
-        return this.request('GET', qs ? `${endpoint}?${qs}` : endpoint);
+        return this.request('GET', qs ? `${endpoint}?${qs}` : endpoint, null, extraOptions);
     }
 
     async post(endpoint, data) {
@@ -112,3 +113,14 @@ class ApiService {
         return result.data;
     }
 }
+
+// Hàm thoát ký tự HTML chống XSS khi render dữ liệu người dùng vào innerHTML
+window.escapeHtml = function (value) {
+    return String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    }[ch]));
+};

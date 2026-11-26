@@ -1,7 +1,7 @@
 // Service gọi API sản phẩm
 class ProductService extends ApiService {
-    async getAll(filters = {}) {
-        return this.get('/products', filters);
+    async getAll(filters = {}, extraOptions = {}) {
+        return this.get('/products', filters, extraOptions);
     }
 
     async getById(id) {

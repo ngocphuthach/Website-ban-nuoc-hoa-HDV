@@ -18,12 +18,17 @@ class UploadController {
             Response::error('Kích thước ảnh tối đa 5MB.', 400);
         }
 
+        $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
+        $types = ['jpg'=>'image/jpeg','jpeg'=>'image/jpeg','png'=>'image/png','webp'=>'image/webp','gif'=>'image/gif'];
+        if (($types[$ext] ?? '') !== $mime || !@getimagesize($file['tmp_name'])) {
+            Response::error('Nội dung ảnh không hợp lệ.', 400);
+        }
         $uploadDir = dirname(__DIR__, 2) . '/pic/uploads';
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
 
-        $fileName = 'prod_' . time() . '_' . rand(1000, 9999) . '.' . $ext;
+        $fileName = 'prod_' . bin2hex(random_bytes(16)) . '.' . $ext;
         $targetPath = $uploadDir . '/' . $fileName;
 
         if (!move_uploaded_file($file['tmp_name'], $targetPath)) {

@@ -6,15 +6,18 @@
     <title>PerfumeStore - Nghệ Thuật Nước Hoa Cao Cấp</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/luxury-v2.css">
+    <link rel="stylesheet" href="../css/maison.css">
+    <link rel="stylesheet" href="../css/signature.css">
 </head>
-<body>
+<body class="maison-store">
     <!-- ======================== NAVBAR ======================== -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#trang-chu" class="logo">PERFUMESTORE</a>
+            <a href="#trang-chu" class="logo maison-wordmark">Perfume<span>Store.</span><small>THE FRAGRANCE HOUSE</small></a>
             <ul class="nav-links">
                 <li><a href="#trang-chu">Trang Chủ</a></li>
                 <li><a href="#trang-san-pham">Sản Phẩm</a></li>
@@ -39,170 +42,136 @@
     <main id="main-content">
         <!-- 1. TRANG CHỦ -->
         <section id="trang-chu" class="page-section active">
-            <!-- Hero Banner 2 cột bất đối xứng -->
-            <div class="hero-editorial" id="hero-editorial">
-                <div class="container hero-editorial-grid">
-                    <div class="hero-editorial-left">
-                        <span class="hero-tag">L'Art de la Parfumerie • Chính Hãng 100%</span>
-                        <h1 class="hero-title">Đánh Thức Bản Sắc Qua Từng Giọt Hương</h1>
-                        <p class="hero-desc">
-                            Khám phá tuyệt tác hương thơm tuyển chọn từ Dior, Chanel, Tom Ford, Creed — nơi nghệ thuật chế tác phương Tây hòa quyện cùng phong thái thượng lưu đương đại.
-                        </p>
-                        <div class="hero-cta">
-                            <a href="#trang-san-pham" class="btn-gold">Khám Phá Bộ Sưu Tập</a>
-                            <a href="#trang-thuong-hieu" class="btn-outline">Thương Hiệu Đối Tác</a>
-                        </div>
-                    </div>
-                    <div class="hero-editorial-right">
-                        <div class="hero-glow"></div>
-                        <div class="hero-visual-card" id="hero-parallax-box">
-                            <img src="../../pic/banner-hero.jpg" alt="Nước hoa cao cấp PerfumeStore" onerror="this.onerror=null;this.src='../../pic/hinhbanner1.jpg'">
-                            <div class="hero-visual-caption">
-                                <span>Edition Privée</span>
-                                <small>Extrait de Parfum</small>
-                            </div>
-                        </div>
-                    </div>
+            <div class="maison-hero" id="hero-editorial">
+                <div class="maison-copy">
+                    <span class="maison-kicker"><span></span> Bộ sưu tập nước hoa</span>
+                    <h1>Hương thơm.<br><em>Dấu ấn riêng.</em></h1>
+                    <p>Khám phá thế giới nước hoa tuyển chọn theo cá tính, cảm xúc và những khoảnh khắc đáng nhớ.</p>
+                    <div class="maison-actions"><a href="#trang-san-pham" class="btn-gold">Khám phá bộ sưu tập</a><a href="#trang-thuong-hieu" class="maison-link">Xem thương hiệu →</a></div>
+                    <div class="maison-index"><span>01</span><span></span><small>Nghệ thuật chế tác hương thơm</small></div>
                 </div>
+                <div class="maison-visual"><img id="maison-hero-image" src="../../pic/banner-hero.jpg" alt="Ảnh nước hoa trong bộ sưu tập"><div class="maison-image-label"><small>Tuyển chọn nổi bật</small><strong id="maison-image-caption">Hương thơm đậm dấu ấn</strong><div><button type="button" id="maison-prev" aria-label="Ảnh trước">←</button><button type="button" id="maison-next" aria-label="Ảnh tiếp theo">→</button></div></div></div>
             </div>
-
-            <!-- Dải thương hiệu đối tác -->
-            <div class="brand-marquee-wrap home-reveal-block">
-                <div id="home-brand-slider" class="brand-marquee-track"></div>
-            </div>
-
-            <!-- Câu chuyện thương hiệu (Brand Heritage) -->
-            <div class="section-block container heritage-section home-reveal-block">
-                <div class="heritage-grid">
-                    <div class="heritage-media">
-                        <img src="../../pic/banner-story.jpg" alt="Nghệ thuật chế tác nước hoa" onerror="this.onerror=null;this.src='../../pic/anhgioithieu1.jpg'">
-                    </div>
-                    <div class="heritage-content glass-card">
-                        <span class="hero-tag">Brand Heritage • Di Sản Mùi Hương</span>
-                        <h2>Nghệ Thuật Chế Tác Từ Những Tầng Hương Nguyên Bản</h2>
-                        <p>
-                            Mỗi giọt nước hoa tại PerfumeStore là kết tinh của hàng trăm tinh dầu quý hiếm được ủ chín trong thời gian chuẩn mực, lưu giữ trọn vẹn tầng hương đầu thanh khiết, tầng hương giữa quyến rũ và hậu hương sâu lắng.
-                        </p>
-                        <div class="heritage-pillars">
-                            <div><strong>100%</strong><span>Chính hãng nhập khẩu</span></div>
-                            <div><strong>12H+</strong><span>Độ lưu hương bền bỉ</span></div>
-                            <div><strong>10+</strong><span>Maison danh tiếng</span></div>
-                        </div>
-                        <a href="#trang-gioi-thieu" class="btn-outline btn-sm">Tìm Hiểu Thêm</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sản phẩm nổi bật & Bộ sưu tập (lọc mượt từ API) -->
-            <div class="section-block container home-reveal-block">
-                <div class="section-header">
-                    <h2>Tuyệt Tác Nổi Bật</h2>
-                    <div class="divider"></div>
-                    <p>Những mùi hương được yêu thích và săn đón nhất tại PerfumeStore</p>
-                    <div class="home-filter-tabs" id="home-filter-tabs">
-                        <button type="button" class="home-tab-btn active" onclick="app.homePage.filterFeatured('', this)">Tất cả</button>
-                        <button type="button" class="home-tab-btn" onclick="app.homePage.filterFeatured('nam', this)">Nước hoa Nam</button>
-                        <button type="button" class="home-tab-btn" onclick="app.homePage.filterFeatured('nu', this)">Nước hoa Nữ</button>
-                        <button type="button" class="home-tab-btn" onclick="app.homePage.filterFeatured('unisex', this)">Unisex</button>
-                    </div>
-                </div>
+            <div class="maison-strip"><span>01 · Khám phá mùi hương</span><span>02 · Chọn dung tích phù hợp</span><span>03 · Định hình dấu ấn riêng</span></div>
+            <div class="maison-catalog container section-block">
+                <div class="maison-heading"><div><span class="maison-kicker">Tuyển chọn</span><h2>Những mùi hương <em>đáng nhớ.</em></h2></div><a class="maison-link" href="#trang-san-pham">Xem toàn bộ →</a></div>
+                <div class="home-filter-tabs" id="home-filter-tabs"><button type="button" class="home-tab-btn active" onclick="app.homePage.filterFeatured('',this)">Tất cả</button><button type="button" class="home-tab-btn" onclick="app.homePage.filterFeatured('nam',this)">Nam</button><button type="button" class="home-tab-btn" onclick="app.homePage.filterFeatured('nu',this)">Nữ</button><button type="button" class="home-tab-btn" onclick="app.homePage.filterFeatured('unisex',this)">Unisex</button></div>
                 <div id="home-featured-grid" class="product-grid"></div>
             </div>
-
-            <!-- Sản phẩm giảm giá -->
-            <div class="section-block container home-reveal-block">
-                <div class="section-header">
-                    <h2>Ưu Đãi Độc Quyền</h2>
-                    <div class="divider"></div>
-                    <p>Sở hữu hương thơm đẳng cấp với mức giá ưu đãi giới hạn</p>
-                </div>
-                <div id="home-sale-grid" class="product-grid"></div>
-            </div>
-
-            <!-- Sản phẩm mới -->
-            <div class="section-block container home-reveal-block">
-                <div class="section-header">
-                    <h2>Hương Thơm Mới Ra Mắt</h2>
-                    <div class="divider"></div>
-                    <p>Cập nhật xu hướng mùi hương mới nhất mùa này</p>
-                </div>
-                <div id="home-new-grid" class="product-grid"></div>
-            </div>
-
-            <!-- Tư vấn mùi hương & Liên hệ (Concierge & Contact) -->
-            <div class="section-block container concierge-section home-reveal-block">
-                <div class="concierge-grid glass-card">
-                    <div class="concierge-media">
-                        <img src="../../pic/banner-contact.jpg" alt="Tư vấn mùi hương PerfumeStore" onerror="this.onerror=null;this.src='../../pic/anhgioithieu2.jpg'">
-                        <div class="concierge-media-overlay">
-                            <span>Private Fragrance Concierge</span>
-                            <p>Đội ngũ chuyên gia mùi hương sẵn sàng đồng hành cùng phong cách riêng của bạn.</p>
-                        </div>
-                    </div>
-                    <form id="home-concierge-form" class="concierge-form">
-                        <span class="hero-tag">Concierge • Tư Vấn Riêng</span>
-                        <h2>Đặt Lịch Tư Vấn Mùi Hương</h2>
-                        <p class="concierge-sub">Để lại thông tin để nhận gợi ý mùi hương phù hợp nhất với cá tính và dịp sử dụng.</p>
-                        <div class="form-group">
-                            <label>Họ và tên</label>
-                            <input type="text" id="concierge-name" placeholder="Nguyễn Văn A" required>
-                        </div>
-                        <div class="concierge-row">
-                            <div class="form-group">
-                                <label>Số điện thoại / Email</label>
-                                <input type="text" id="concierge-contact" placeholder="0901 234 567" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Nhóm hương quan tâm</label>
-                                <select id="concierge-scent">
-                                    <option value="Gỗ & Hổ phách (Trầm ấm)">Gỗ & Hổ phách (Trầm ấm)</option>
-                                    <option value="Hoa cỏ & Xạ hương (Thanh lịch)">Hoa cỏ & Xạ hương (Thanh lịch)</option>
-                                    <option value="Cam chanh & Biển (Tươi mát)">Cam chanh & Biển (Tươi mát)</option>
-                                    <option value="Quà tặng cao cấp">Quà tặng cao cấp</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Lời nhắn thêm</label>
-                            <textarea id="concierge-note" rows="3" placeholder="Phong cách hoặc dòng nước hoa bạn đang tìm kiếm..."></textarea>
-                        </div>
-                        <button type="submit" class="btn-gold" style="width: 100%;">Gửi Yêu Cầu Tư Vấn</button>
-                    </form>
-                </div>
-            </div>
+            <div class="maison-editorial"><div class="maison-editorial-photo"><img loading="lazy" src="../../pic/banner-contact.jpg" alt="Nước hoa và hoa tươi"></div><div class="maison-editorial-copy"><span class="maison-kicker">Nghệ thuật hương thơm</span><h2>Không chỉ là<br><em>một mùi hương.</em></h2><p>Từ hương hoa thanh lịch đến gỗ trầm ấm áp, mỗi lựa chọn là một cách kể câu chuyện của riêng bạn.</p><a href="#trang-san-pham" class="btn-gold">Tìm mùi hương phù hợp</a></div></div>
+            <div class="container section-block maison-catalog"><div class="maison-heading"><div><span class="maison-kicker">Ưu đãi hiện hành</span><h2>Ưu đãi <em>tuyển chọn.</em></h2></div><a class="maison-link" href="#trang-san-pham">Xem thêm →</a></div><div id="home-sale-grid" class="product-grid"></div></div>
+            <div class="container section-block maison-catalog"><div class="maison-heading"><div><span class="maison-kicker">Mới ra mắt</span><h2>Khám phá <em>điều mới.</em></h2></div></div><div id="home-new-grid" class="product-grid"></div></div>
+            <div class="maison-brands container"><div class="maison-heading"><div><span class="maison-kicker">Thương hiệu đối tác</span><h2>Những nhà hương.</h2></div><a href="#trang-thuong-hieu" class="maison-link">Xem tất cả →</a></div><div class="brand-marquee-wrap"><div id="home-brand-slider" class="brand-marquee-track"></div></div></div>
         </section>
 
         <!-- 2. TRANG SẢN PHẨM -->
-        <section id="trang-san-pham" class="page-section section-block">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Bộ Sưu Tập Nước Hoa</h2>
-                    <div class="divider"></div>
-                    <p id="product-count-info">Đang tải danh sách sản phẩm...</p>
+        <section id="trang-san-pham" class="page-section signature-page">
+<div class="sig-collection-hero"><div><span class="sig-label">Maison Signature · Bộ sưu tập</span><h1>Hương thơm.<br><em>Dấu ấn riêng.</em></h1><p>Khám phá những lựa chọn dành cho từng cá tính và khoảnh khắc.</p></div><img src="../../pic/banner-contact.jpg" alt="Bộ sưu tập nước hoa"></div>
+<div class="sig-catalog container">
+    <div id="sig-filter-backdrop" class="sig-filter-backdrop"></div>
+    <aside id="sig-filters-drawer" class="sig-filters" aria-label="Bộ lọc sản phẩm">
+        <div class="sig-filters-head">
+            <div><span class="sig-label">Tùy chỉnh tìm kiếm</span><h2>Bộ lọc</h2></div>
+            <button type="button" id="btn-close-filters" class="sig-drawer-close" aria-label="Đóng bộ lọc">&times;</button>
+        </div>
+
+        <label for="filter-search">Tìm kiếm</label>
+        <input id="filter-search" placeholder="Tên, mã, thương hiệu…">
+
+        <label for="filter-brand">Nhà hương</label>
+        <select id="filter-brand"><option value="">Tất cả thương hiệu</option></select>
+
+        <label for="filter-type">Phong cách / Giới tính</label>
+        <select id="filter-type"><option value="">Tất cả phân loại</option></select>
+
+        <label for="filter-sort">Sắp xếp</label>
+        <select id="filter-sort">
+            <option value="">Mặc định</option>
+            <option value="newest">Sản phẩm mới nhất</option>
+            <option value="price_asc">Giá: Thấp đến Cao</option>
+            <option value="price_desc">Giá: Cao đến Thấp</option>
+            <option value="name_asc">Tên A → Z</option>
+            <option value="discount_desc">Giảm giá nhiều nhất</option>
+        </select>
+
+        <!-- Khu vực Khoảng giá -->
+        <div class="sig-price-filter">
+            <button type="button" id="btn-toggle-price" class="sig-price-toggle" aria-expanded="true" aria-controls="price-filter-body">
+                <span>Khoảng giá</span>
+                <i class="fa-solid fa-chevron-up"></i>
+            </button>
+
+            <div id="price-filter-body" class="sig-price-body">
+                <div class="dual-range-values">
+                    <span id="range-min-label">0 ₫</span>
+                    <span id="range-max-label">10.000.000 ₫</span>
                 </div>
 
-                <div class="filter-bar">
-                    <input type="text" id="filter-search" placeholder="Tìm tên nước hoa, mã SP, thương hiệu...">
-                    <select id="filter-brand"><option value="">Tất cả thương hiệu</option></select>
-                    <select id="filter-type"><option value="">Tất cả phân loại</option></select>
-                    <select id="filter-sort">
-                        <option value="">Mới nhất</option>
-                        <option value="name_asc">Tên A → Z</option>
-                        <option value="discount_desc">Giảm giá nhiều nhất</option>
-                    </select>
-                    <button id="btn-reset-filter" class="btn-outline btn-sm">Đặt lại</button>
+                <div class="dual-range-wrap">
+                    <div class="dual-range-track"></div>
+                    <div class="dual-range-fill" id="dual-range-fill"></div>
+                    <input type="range" id="range-min-price" min="0" max="10000000" step="50000" value="0" aria-label="Giá thấp nhất">
+                    <input type="range" id="range-max-price" min="0" max="10000000" step="50000" value="10000000" aria-label="Giá cao nhất">
                 </div>
 
-                <div id="product-grid" class="product-grid"></div>
-                <div id="product-pagination" class="pagination"></div>
+                <div class="price-inputs-grid">
+                    <div>
+                        <label for="filter-min-price">Giá thấp nhất</label>
+                        <input type="text" id="filter-min-price" inputmode="numeric" placeholder="Từ (VNĐ)">
+                    </div>
+                    <div>
+                        <label for="filter-max-price">Giá cao nhất</label>
+                        <input type="text" id="filter-max-price" inputmode="numeric" placeholder="Đến (VNĐ)">
+                    </div>
+                </div>
+                <p id="price-filter-error" class="price-filter-error" role="alert"></p>
+
+                <div class="sig-price-presets" id="price-presets">
+                    <button type="button" class="price-preset-btn" data-min="0" data-max="499999">Dưới 500.000 VNĐ</button>
+                    <button type="button" class="price-preset-btn" data-min="500000" data-max="999999">500.000 – dưới 1 triệu</button>
+                    <button type="button" class="price-preset-btn" data-min="1000000" data-max="1999999">1 triệu – dưới 2 triệu</button>
+                    <button type="button" class="price-preset-btn" data-min="2000000" data-max="2999999">2 triệu – dưới 3 triệu</button>
+                    <button type="button" class="price-preset-btn" data-min="3000000" data-max="4999999">3 triệu – dưới 5 triệu</button>
+                    <button type="button" class="price-preset-btn" data-min="5000000" data-max="">Từ 5 triệu trở lên</button>
+                </div>
+
+                <button type="button" id="btn-reset-price" class="btn-outline btn-price-reset">Đặt lại bộ lọc giá</button>
             </div>
-        </section>
+        </div>
+
+        <button type="button" id="btn-apply-mobile-filters" class="sig-cta sig-mobile-apply">Áp dụng bộ lọc</button>
+        <button type="button" id="btn-reset-filter" class="btn-outline">Đặt lại toàn bộ</button>
+        <div class="sig-filter-note">Cần tư vấn thêm?<br><a href="#trang-lien-he">Liên hệ chuyên viên →</a></div>
+    </aside>
+
+    <div class="sig-results">
+        <div class="sig-results-head">
+            <div>
+                <span class="sig-label">Danh mục nước hoa</span>
+                <h2>Bộ sưu tập</h2>
+                <p id="product-count-info" aria-live="polite">Đang tải danh sách…</p>
+                <div id="active-price-badge" class="active-price-badge"></div>
+            </div>
+            <div class="sig-results-controls">
+                <button type="button" id="btn-mobile-filters" class="btn-outline sig-mobile-filter-btn">
+                    <i class="fa-solid fa-sliders"></i> Bộ lọc
+                </button>
+                <div class="sig-view">
+                    <button type="button" data-grid="3" aria-pressed="true" aria-label="Ba cột">▦</button>
+                    <button type="button" data-grid="2" aria-pressed="false" aria-label="Hai cột">▥</button>
+                </div>
+            </div>
+        </div>
+        <div id="product-grid" class="product-grid"></div>
+        <div id="product-pagination" class="pagination"></div>
+    </div>
+</div></section>
 
         <!-- 3. TRANG THƯƠNG HIỆU -->
         <section id="trang-thuong-hieu" class="page-section section-block">
             <div class="container">
                 <div class="section-header">
-                    <h2>Thương Hiệu Danh Tiếng</h2>
+                    <h2>Thương hiệu đối tác</h2>
                     <div class="divider"></div>
                     <p>Chọn thương hiệu yêu thích để lọc nhanh bộ sưu tập</p>
                 </div>
@@ -211,22 +180,7 @@
         </section>
 
         <!-- 4. TRANG CHI TIẾT SẢN PHẨM -->
-        <section id="trang-chi-tiet" class="page-section section-block">
-            <div class="container">
-                <div style="margin-bottom: 20px;">
-                    <a href="#trang-san-pham" class="btn-outline btn-sm"><i class="fa-solid fa-arrow-left"></i> Quay lại sản phẩm</a>
-                </div>
-                <div id="product-detail-container" class="detail-layout"></div>
-
-                <div class="section-block" style="padding-bottom: 0;">
-                    <div class="section-header">
-                        <h2>Sản Phẩm Cùng Thương Hiệu</h2>
-                        <div class="divider"></div>
-                    </div>
-                    <div id="related-products-grid" class="product-grid"></div>
-                </div>
-            </div>
-        </section>
+        <section id="trang-chi-tiet" class="page-section signature-page"><div class="container sig-detail"><div class="sig-breadcrumb"><a href="#trang-chu">Trang chủ</a> / <a href="#trang-san-pham">Bộ sưu tập</a> / Chi tiết sản phẩm</div><div id="product-detail-container" class="detail-layout"></div><div class="sig-related"><span class="sig-label">Gợi ý tương đồng</span><h2>Có thể bạn sẽ thích</h2><div id="related-products-grid" class="product-grid"></div></div></div></section>
 
         <!-- 5. TRANG GIỎ HÀNG -->
         <section id="trang-gio-hang" class="page-section section-block">
@@ -319,31 +273,35 @@
         </section>
 
         <!-- 7. TRANG GIỚI THIỆU -->
-        <section id="trang-gioi-thieu" class="page-section section-block">
-            <div id="about-page-root" class="container"></div>
-        </section>
+        <section id="trang-gioi-thieu" class="page-section signature-page"><div id="about-page-root"><div class="sig-story-hero"><img src="../../pic/banner-story.jpg" alt="Không gian hương thơm"><div><span class="sig-label">Câu chuyện Maison</span><h1>Mùi hương là<br><em>một ký ức.</em></h1><p>Một cách tinh tế để kể câu chuyện của riêng bạn.</p></div></div><div class="sig-story-intro sig-reveal"><span class="sig-label">01 · Triết lý chế tác</span><h2>Không chỉ là nước hoa.<br>Là cách bạn được nhớ đến.</h2><p>Maison là không gian trực tuyến dành cho những người yêu hương thơm. Chúng tôi mong muốn hành trình chọn nước hoa trở nên gần gũi, minh bạch và mang đậm dấu ấn cá nhân.</p></div><div class="sig-story-split sig-reveal"><img src="../../pic/anhgioithieu1.jpg" alt="Cảm hứng nước hoa"><div><span class="sig-label">02 · Nghệ thuật lựa chọn</span><h2>Chọn bằng cảm xúc.</h2><p>Từ hương gỗ trầm ấm đến hoa cỏ nhẹ nhàng, mỗi mùi hương mở ra một trải nghiệm riêng biệt theo từng thời khắc trong ngày.</p><a href="#trang-san-pham" class="sig-cta">Khám phá bộ sưu tập</a></div></div><div class="sig-values container sig-reveal"><span class="sig-label">03 · Giá trị cốt lõi</span><h2>Ba điều chúng tôi hướng tới.</h2><div><article><small>01</small><h3>Tuyển chọn</h3><p>Danh mục chính hãng, thông tin dung tích và tồn kho rõ ràng.</p></article><article><small>02</small><h3>Cá nhân hóa</h3><p>Gợi ý mùi hương theo phong cách và ngân sách mong muốn.</p></article><article><small>03</small><h3>Trải nghiệm</h3><p>Đặt hàng thuận tiện và nhất quán trên mọi thiết bị.</p></article></div></div></div></section>
 
         <!-- 8. TRANG LIÊN HỆ -->
-        <section id="trang-lien-he" class="page-section section-block">
-            <div id="contact-page-root" class="container"></div>
-        </section>
+        <section id="trang-lien-he" class="page-section signature-page"><div id="contact-page-root"><div class="sig-contact"><div class="sig-contact-photo"><img src="../../pic/anhgioithieu2.jpg" alt="Cảm hứng không gian Maison"><div><span class="sig-label">Tư vấn riêng</span><h1>Hãy bắt đầu<br><em>một cuộc trò chuyện.</em></h1><p>Chúng tôi lắng nghe để tìm ra mùi hương phù hợp nhất với bạn.</p></div></div><div class="sig-contact-body"><span class="sig-label">Liên hệ tư vấn</span><h2>Chúng tôi có thể giúp gì?</h2><p>Điền thông tin bên dưới để chuẩn bị yêu cầu tư vấn mùi hương.</p><form id="signature-contact-form"><label>Họ và tên<input name="name" required maxlength="100" autocomplete="name"></label><label>Email<input name="email" required type="email" autocomplete="email"></label><label>Chủ đề<select name="topic"><option>Tư vấn mùi hương</option><option>Hỗ trợ đơn hàng</option><option>Thông tin sản phẩm</option></select></label><label>Lời nhắn<textarea name="message" required maxlength="1000" rows="4"></textarea></label><button class="sig-cta" type="submit">Gửi yêu cầu tư vấn</button><small>Yêu cầu sẽ được lưu thành bản ghi trên thiết bị của bạn.</small><p id="signature-contact-status" role="status"></p></form></div></div><div class="sig-faq container sig-reveal"><div><span class="sig-label">Câu hỏi thường gặp</span><h2>Những điều bạn<br>có thể muốn biết.</h2></div><div><details><summary>Làm sao chọn nước hoa phù hợp?</summary><p>Khám phá bộ sưu tập theo khoảng giá hoặc sử dụng công cụ tư vấn theo ngân sách và từ khóa mùi hương.</p></details><details><summary>Có thể chọn nhiều dung tích không?</summary><p>Trang chi tiết hiển thị đầy đủ các dung tích, giá bán và tồn kho hiện có.</p></details><details><summary>Theo dõi đơn hàng ở đâu?</summary><p>Đăng nhập và mở mục Lịch sử đơn hàng trong menu tài khoản để theo dõi trạng thái.</p></details></div></div></div></section>
 
         <!-- 9. TRANG ĐĂNG NHẬP -->
         <section id="trang-dang-nhap" class="page-section section-block">
             <div class="container">
-                <form id="login-form" class="auth-card">
-                    <h2>Đăng Nhập</h2>
+                <form id="login-form" class="auth-card" novalidate>
+                    <h2>Đăng nhập</h2>
+                    <p class="auth-subtitle">Truy cập tài khoản để theo dõi đơn hàng và ưu đãi thành viên.</p>
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" id="login-email" placeholder="example@gmail.com" required>
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" placeholder="example@gmail.com" autocomplete="email" required>
+                        <small class="field-error" id="login-email-error"></small>
                     </div>
                     <div class="form-group">
-                        <label>Mật khẩu</label>
-                        <input type="password" id="login-password" placeholder="••••••" required>
+                        <label for="login-password">Mật khẩu</label>
+                        <div class="password-input-wrap">
+                            <input type="password" id="login-password" placeholder="Nhập mật khẩu" autocomplete="current-password" required>
+                            <button type="button" class="btn-toggle-password" onclick="app.togglePassword('login-password', this)" aria-label="Hiển thị mật khẩu">
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                        <small class="field-error" id="login-password-error"></small>
                     </div>
-                    <button type="submit" class="btn-gold" style="width: 100%; margin-top: 8px;">Đăng Nhập</button>
-                    <p style="text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-muted);">
-                        Chưa có tài khoản? <a href="#trang-dang-ky" class="gold-text">Đăng ký ngay</a>
+                    <button type="submit" id="login-submit-btn" class="btn-gold" style="width: 100%; margin-top: 8px;">Đăng nhập</button>
+                    <p class="auth-switch-note">
+                        Chưa có tài khoản? <a href="#trang-dang-ky" class="gold-text">Đăng ký tài khoản</a>
                     </p>
                 </form>
             </div>
@@ -352,15 +310,55 @@
         <!-- 10. TRANG ĐĂNG KÝ -->
         <section id="trang-dang-ky" class="page-section section-block">
             <div class="container">
-                <form id="register-form" class="auth-card">
-                    <h2>Tạo Tài Khoản</h2>
-                    <div class="form-group"><label>Họ và tên</label><input type="text" id="reg-fullname" required></div>
-                    <div class="form-group"><label>Email</label><input type="email" id="reg-email" required></div>
-                    <div class="form-group"><label>Số điện thoại</label><input type="tel" id="reg-phone"></div>
-                    <div class="form-group"><label>Địa chỉ</label><input type="text" id="reg-address"></div>
-                    <div class="form-group"><label>Mật khẩu (tối thiểu 6 ký tự)</label><input type="password" id="reg-password" minlength="6" required></div>
-                    <button type="submit" class="btn-gold" style="width: 100%; margin-top: 8px;">Đăng Ký</button>
-                    <p style="text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-muted);">
+                <form id="register-form" class="auth-card" novalidate>
+                    <h2>Đăng ký tài khoản</h2>
+                    <p class="auth-subtitle">Tạo tài khoản mới để bắt đầu trải nghiệm mua sắm tại PerfumeStore.</p>
+                    <div class="form-group">
+                        <label for="reg-fullname">Họ và tên</label>
+                        <input type="text" id="reg-fullname" placeholder="Nguyễn Văn A" autocomplete="name" required>
+                        <small class="field-error" id="reg-fullname-error"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email">Email</label>
+                        <input type="email" id="reg-email" placeholder="example@gmail.com" autocomplete="email" required>
+                        <small class="field-error" id="reg-email-error"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-phone">Số điện thoại</label>
+                        <input type="tel" id="reg-phone" placeholder="0909 123 456" autocomplete="tel">
+                        <small class="field-error" id="reg-phone-error"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-address">Địa chỉ</label>
+                        <input type="text" id="reg-address" placeholder="Số nhà, đường, quận/huyện, tỉnh/thành" autocomplete="street-address">
+                        <small class="field-error" id="reg-address-error"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Mật khẩu (tối thiểu 8 ký tự, gồm chữ hoa, thường và số)</label>
+                        <div class="password-input-wrap">
+                            <input type="password" id="reg-password" placeholder="Tạo mật khẩu mạnh" autocomplete="new-password" minlength="8" required>
+                            <button type="button" class="btn-toggle-password" onclick="app.togglePassword('reg-password', this)" aria-label="Hiển thị mật khẩu">
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength" id="reg-password-strength">
+                            <div class="strength-bars"><span></span><span></span><span></span><span></span></div>
+                            <small id="reg-strength-text"></small>
+                        </div>
+                        <small class="field-error" id="reg-password-error"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-confirm-password">Xác nhận mật khẩu</label>
+                        <div class="password-input-wrap">
+                            <input type="password" id="reg-confirm-password" placeholder="Nhập lại mật khẩu" autocomplete="new-password" required>
+                            <button type="button" class="btn-toggle-password" onclick="app.togglePassword('reg-confirm-password', this)" aria-label="Hiển thị mật khẩu xác nhận">
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                        <small class="field-error" id="reg-confirm-password-error"></small>
+                    </div>
+                    <button type="submit" id="register-submit-btn" class="btn-gold" style="width: 100%; margin-top: 8px;">Đăng ký tài khoản</button>
+                    <p class="auth-switch-note">
                         Đã có tài khoản? <a href="#trang-dang-nhap" class="gold-text">Đăng nhập</a>
                     </p>
                 </form>
@@ -510,10 +508,7 @@
     <div id="toast-container"></div>
 
     <!-- ======================== SCRIPTS ======================== -->
-    <!-- GSAP & ScrollTrigger cho hiệu ứng cuộn & micro-interaction -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
+    <script src="../js/components/gallery.js"></script>
     <script src="../js/services/api.service.js"></script>
     <script src="../js/services/auth.service.js"></script>
     <script src="../js/services/product.service.js"></script>
@@ -531,6 +526,9 @@
     <script src="../js/pages/checkout.js"></script>
     <script src="../js/pages/profile.js"></script>
     <script src="../js/pages/orders.js"></script>
+    <script src="../js/components/store-extras.js"></script>
     <script src="../js/app.js"></script>
+    <script src="../js/components/maison.js"></script>
+<script src="../js/components/signature.js"></script>
 </body>
 </html>

@@ -50,10 +50,14 @@ class Cart {
         this.saveItems(items);
         toast.success(`Đã thêm ${product.name} (${ml}ml) vào giỏ hàng`);
 
-        // Hiệu ứng nảy mượt trên icon giỏ hàng khi thêm sản phẩm
+        // Hiệu ứng nảy mượt bằng Web Animations API (không phụ thuộc thư viện ngoài)
         const cartBtn = document.getElementById('btn-open-cart');
-        if (cartBtn && window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            gsap.fromTo(cartBtn, { scale: 0.85 }, { scale: 1, duration: 0.55, ease: 'elastic.out(1, 0.4)' });
+        if (cartBtn && cartBtn.animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            cartBtn.animate([
+                { transform: 'scale(0.86)' },
+                { transform: 'scale(1.12)' },
+                { transform: 'scale(1)' }
+            ], { duration: 420, easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' });
         }
     }
 

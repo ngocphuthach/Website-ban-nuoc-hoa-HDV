@@ -2,21 +2,53 @@
 // Lớp tự động khởi tạo bảng và nạp dữ liệu mẫu từ products.json nếu Database đang trống
 class Seeder {
     public static function ensureSeeded(PDO $db, array $config): void {
+        $flagPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'perfumestore_seeded_v2.flag';
+        if (file_exists($flagPath)) {
+            return;
+        }
+
+        $hasProducts = false;
         try {
             $count = (int)$db->query('SELECT COUNT(*) FROM Products')->fetchColumn();
             if ($count > 0) {
-                self::ensureBrandLogos($db);
-                return;
+                $hasProducts = true;
             }
         } catch (Throwable $e) {
             // Bảng chưa tồn tại -> tiếp tục tạo bảng bên dưới
         }
 
+        if ($hasProducts) {
+            self::ensureGallery($db);
+            self::ensureExtras($db);
+            self::ensureBrandLogos($db);
+            @file_put_contents($flagPath, (string)time());
+            return;
+        }
         self::createTables($db);
+        self::ensureGallery($db);
+        self::ensureExtras($db);
         self::seedDefaultAdmin($db, $config);
         self::seedCategories($db);
         self::seedProductsAndBrands($db);
         self::ensureBrandLogos($db);
+        @file_put_contents($flagPath, (string)time());
+    }
+
+    private static function ensureExtras(PDO $db): void {
+        $db->exec("CREATE TABLE IF NOT EXISTS Payments (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,orderId INT UNSIGNED NOT NULL UNIQUE,reference VARCHAR(64) NOT NULL UNIQUE,amount BIGINT UNSIGNED NOT NULL,state ENUM('pending','paid','failed') DEFAULT 'pending',gatewayReference VARCHAR(100) NULL,FOREIGN KEY(orderId) REFERENCES Orders(id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        $db->exec("CREATE TABLE IF NOT EXISTS NotificationOutbox (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, orderId INT UNSIGNED NOT NULL, email VARCHAR(100) NOT NULL, status VARCHAR(50) NOT NULL, sentAt DATETIME NULL, createdAt DATETIME DEFAULT CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        $db->exec("CREATE TABLE IF NOT EXISTS Reviews (productId INT UNSIGNED NOT NULL,userId INT UNSIGNED NOT NULL,rating TINYINT UNSIGNED NOT NULL,comment TEXT NOT NULL,createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,PRIMARY KEY(productId,userId),FOREIGN KEY(productId) REFERENCES Products(id) ON DELETE CASCADE,FOREIGN KEY(userId) REFERENCES Users(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        $db->exec("CREATE TABLE IF NOT EXISTS Favorites (userId INT UNSIGNED NOT NULL,productId INT UNSIGNED NOT NULL,PRIMARY KEY(userId,productId),FOREIGN KEY(productId) REFERENCES Products(id) ON DELETE CASCADE,FOREIGN KEY(userId) REFERENCES Users(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    }
+    private static function ensureGallery(PDO $db): void {
+        $db->exec("CREATE TABLE IF NOT EXISTS ProductImages (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            productId INT UNSIGNED NOT NULL,
+            imageUrl VARCHAR(1024) NOT NULL,
+            sortOrder INT UNSIGNED NOT NULL DEFAULT 0,
+            INDEX (productId, sortOrder),
+            FOREIGN KEY (productId) REFERENCES Products(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
     }
 
     private static function createTables(PDO $db): void {
@@ -121,7 +153,7 @@ class Seeder {
             $ins->execute([
                 'PerfumeStore Admin',
                 $adminEmail,
-                password_hash('admin123', PASSWORD_DEFAULT),
+                password_hash(getenv('ADMIN_PASSWORD') ?: bin2hex(random_bytes(24)), PASSWORD_DEFAULT),
                 '0900000000',
                 'TP. Hồ Chí Minh',
                 'admin'

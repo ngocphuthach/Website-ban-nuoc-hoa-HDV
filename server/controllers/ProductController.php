@@ -8,6 +8,14 @@ class ProductController {
     }
 
     public function index(array $params): void {
+        // Kiểm tra định dạng tham số giá nếu client có truyền
+        foreach (['minPrice' => 'Giá thấp nhất', 'maxPrice' => 'Giá cao nhất'] as $key => $label) {
+            if (isset($params[$key]) && trim((string)$params[$key]) !== '') {
+                if (!is_numeric($params[$key])) {
+                    throw new InvalidArgumentException("{$label} phải là số hợp lệ.");
+                }
+            }
+        }
         $result = $this->productService->getAll($params);
         Response::success($result);
     }

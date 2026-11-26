@@ -1,4 +1,4 @@
-// Quản lý đơn hàng trong trang Admin
+// Quản lý đơn hàng trong trang Admin (dùng Modal chi tiết, chống XSS)
 class OrderManager {
     constructor() {
         this.orderService = new OrderService();
@@ -19,7 +19,7 @@ class OrderManager {
             this.orders = await this.orderService.getAll(filters);
             this.renderTable(this.orders);
         } catch (err) {
-            tbody.innerHTML = `<tr><td colspan="7">${err.message}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7">${escapeHtml(err.message)}</td></tr>`;
         }
     }
 
@@ -35,21 +35,21 @@ class OrderManager {
 
         tbody.innerHTML = orders.map(o => `
             <tr>
-                <td><strong>#${o.id}</strong></td>
+                <td><strong>#${Number(o.id)}</strong></td>
                 <td>
-                    <div>${o.customerName}</div>
-                    <small style="color: var(--text-muted)">${o.phone}</small>
+                    <div>${escapeHtml(o.customerName)}</div>
+                    <small style="color: var(--text-muted)">${escapeHtml(o.phone)}</small>
                 </td>
                 <td>${new Date(o.orderDate).toLocaleDateString('vi-VN')}</td>
-                <td>${o.paymentMethod}</td>
+                <td>${escapeHtml(o.paymentMethod)}${o.paymentMethod === 'VNPay' ? ` <small style="color:var(--gold)">(${escapeHtml(o.paymentStatus)})</small>` : ''}</td>
                 <td class="gold-text">${fmt(o.total)}</td>
                 <td>
-                    <select class="admin-status-select" onchange="adminApp.orderManager.updateStatus(${o.id}, this.value)">
+                    <select class="admin-status-select" onchange="adminApp.orderManager.updateStatus(${Number(o.id)}, this.value)">
                         ${statuses.map(s => `<option value="${s}" ${o.status === s ? 'selected' : ''}>${s}</option>`).join('')}
                     </select>
                 </td>
                 <td>
-                    <button class="btn-outline btn-sm" onclick="adminApp.orderManager.viewDetail(${o.id})">Chi tiết</button>
+                    <button class="btn-outline btn-sm" onclick="adminApp.orderManager.viewDetail(${Number(o.id)})">Chi tiết</button>
                 </td>
             </tr>
         `).join('');
@@ -59,18 +59,43 @@ class OrderManager {
         const order = this.orders.find(o => o.id === id);
         if (!order) return;
         const fmt = (n) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n || 0);
-        const itemsText = (order.items || [])
-            .map(i => `• ${i.productName} (${i.ml}ml) × ${i.quantity} = ${fmt(i.price * i.quantity)}`)
-            .join('\n');
 
-        alert(
-            `ĐƠN HÀNG #${order.id}\n` +
-            `Khách hàng: ${order.customerName} (${order.phone})\n` +
-            `Địa chỉ: ${order.address}\n` +
-            `Trạng thái: ${order.status}\n\n` +
-            `Sản phẩm:\n${itemsText}\n\n` +
-            `Tổng cộng: ${fmt(order.total)}`
-        );
+        const body = document.getElementById('admin-order-detail-body');
+        const title = document.getElementById('order-modal-title');
+        if (!body || !title) return;
+
+        title.textContent = `Chi tiết đơn hàng #${Number(order.id)}`;
+        body.innerHTML = `
+            <div style="display:grid; gap:8px; margin-bottom:16px; font-size:14px;">
+                <div><strong>Khách hàng:</strong> ${escapeHtml(order.customerName)} (${escapeHtml(order.phone)})</div>
+                <div><strong>Email:</strong> ${escapeHtml(order.email)}</div>
+                <div><strong>Địa chỉ:</strong> ${escapeHtml(order.address)}</div>
+                <div><strong>Thanh toán:</strong> ${escapeHtml(order.paymentMethod)}${order.paymentMethod === 'VNPay' ? ` — ${escapeHtml(order.paymentStatus)}` : ''}</div>
+                <div><strong>Trạng thái:</strong> <span class="gold-text">${escapeHtml(order.status)}</span></div>
+                <div><strong>Ngày đặt:</strong> ${new Date(order.orderDate).toLocaleString('vi-VN')}</div>
+            </div>
+            <table class="data-table">
+                <thead><tr><th>Sản phẩm</th><th>Dung tích</th><th>SL</th><th>Thành tiền</th></tr></thead>
+                <tbody>
+                    ${(order.items || []).map(i => `
+                        <tr>
+                            <td>${escapeHtml(i.productName)}</td>
+                            <td>${Number(i.ml)}ml</td>
+                            <td>${Number(i.quantity)}</td>
+                            <td class="gold-text">${fmt(i.price * i.quantity)}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            <div style="text-align:right; margin-top:16px; font-size:17px;">
+                <strong>Tổng cộng: <span class="gold-text">${fmt(order.total)}</span></strong>
+            </div>
+        `;
+        document.getElementById('admin-order-modal')?.classList.add('active');
+    }
+
+    closeModal() {
+        document.getElementById('admin-order-modal')?.classList.remove('active');
     }
 
     async updateStatus(id, status) {

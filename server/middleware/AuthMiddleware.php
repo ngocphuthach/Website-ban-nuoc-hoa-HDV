@@ -1,5 +1,5 @@
 <?php
-// Middleware xác thực JWT HS256 tự viết (không dùng thư viện ngoài)
+// Middleware xác thực JWT HS256 tự viết (hỗ trợ thu hồi token khi đăng xuất)
 class AuthMiddleware {
     // Mã hóa base64url theo chuẩn JWT
     private static function base64UrlEncode(string $data): string {
@@ -15,11 +15,47 @@ class AuthMiddleware {
         return base64_decode(strtr($data, '-_', '+/'));
     }
 
+    private static function revokeStorePath(): string {
+        return sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'perfumestore_revoked_tokens.json';
+    }
+
+    private static function readRevokedStore(): array {
+        $path = self::revokeStorePath();
+        if (!file_exists($path)) {
+            return [];
+        }
+        $data = json_decode((string)file_get_contents($path), true);
+        if (!is_array($data)) {
+            return [];
+        }
+        $now = time();
+        return array_filter($data, fn($exp) => is_int($exp) && $exp > $now);
+    }
+
+    // Thu hồi JWT khi người dùng đăng xuất
+    public static function revokeToken(string $token, array $config): void {
+        $payload = self::verifyToken($token, $config['jwt']['secret']);
+        if (!$payload) {
+            return;
+        }
+        $store = self::readRevokedStore();
+        $store[hash('sha256', $token)] = (int)$payload['exp'];
+        file_put_contents(self::revokeStorePath(), json_encode($store), LOCK_EX);
+    }
+
+    public static function isTokenRevoked(string $token): bool {
+        $store = self::readRevokedStore();
+        return isset($store[hash('sha256', $token)]);
+    }
+
     // Tạo JWT token từ payload
     public static function createToken(array $payload, string $secret, int $expire): string {
         $header = ['typ' => 'JWT', 'alg' => 'HS256'];
         $payload['iat'] = time();
         $payload['exp'] = time() + $expire;
+        if (empty($payload['jti'])) {
+            $payload['jti'] = bin2hex(random_bytes(8));
+        }
 
         $headerEncoded = self::base64UrlEncode(json_encode($header));
         $payloadEncoded = self::base64UrlEncode(json_encode($payload));
@@ -52,8 +88,8 @@ class AuthMiddleware {
             return null;
         }
 
-        // Kiểm tra thời hạn token
-        if (isset($payload['exp']) && $payload['exp'] < time()) {
+        // Kiểm tra thời hạn token và định danh user
+        if (!isset($payload['exp'], $payload['id']) || !is_int($payload['exp']) || $payload['exp'] <= time()) {
             return null;
         }
 
@@ -71,13 +107,22 @@ class AuthMiddleware {
         return null;
     }
 
-    // Lấy thông tin user từ token (trả về null nếu chưa đăng nhập)
+    // Lấy thông tin user từ token (trả về null nếu chưa đăng nhập hoặc token đã đăng xuất)
     public static function getUser(array $config): ?array {
         $token = self::getTokenFromHeader();
-        if (!$token) {
+        if (!$token || self::isTokenRevoked($token)) {
             return null;
         }
-        return self::verifyToken($token, $config['jwt']['secret']);
+        $payload = self::verifyToken($token, $config['jwt']['secret']);
+        if (!$payload) {
+            return null;
+        }
+        $q = Database::getInstance($config['db'])->prepare(
+            'SELECT id, role, email, fullName FROM Users WHERE id = ?'
+        );
+        $q->execute([(int)$payload['id']]);
+        $user = $q->fetch();
+        return $user ?: null;
     }
 
     // Bắt buộc phải đăng nhập mới được đi tiếp

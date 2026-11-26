@@ -52,11 +52,26 @@ class OrderService {
         $address = Validator::requireField($data, 'address', 'địa chỉ giao hàng');
         $paymentMethod = trim((string)($data['paymentMethod'] ?? 'COD')) ?: 'COD';
 
+        if (!in_array($paymentMethod, ['COD','Chuyển khoản','VNPay'], true)) throw new InvalidArgumentException('Phương thức thanh toán không hợp lệ.');
+        if ($paymentMethod==='VNPay' && !PaymentService::enabled()) throw new RuntimeException('VNPay chưa được cấu hình.',503);
         $items = $data['items'] ?? [];
         if (empty($items) || !is_array($items)) {
             throw new InvalidArgumentException('Giỏ hàng trống, không thể đặt hàng.');
         }
 
+        if (count($items)>100) throw new InvalidArgumentException('Quá nhiều dòng sản phẩm.');
+        $merged=[];
+        foreach ($items as $item) {
+            if (!is_array($item)) throw new InvalidArgumentException('Sản phẩm không hợp lệ.');
+            $id=filter_var($item['productId']??null,FILTER_VALIDATE_INT,['options'=>['min_range'=>1]]);
+            $ml=filter_var($item['ml']??null,FILTER_VALIDATE_INT,['options'=>['min_range'=>1]]);
+            $qty=filter_var($item['quantity']??null,FILTER_VALIDATE_INT,['options'=>['min_range'=>1,'max_range'=>100]]);
+            if (!$id || !$ml || !$qty) throw new InvalidArgumentException('Sản phẩm hoặc số lượng không hợp lệ.');
+            $key="$id:$ml";
+            if (!isset($merged[$key])) $merged[$key]=['productId'=>$id,'ml'=>$ml,'quantity'=>0];
+            $merged[$key]['quantity']+=$qty;
+        }
+        ksort($merged); $items=array_values($merged);
         // Kiểm tra sản phẩm, giá và tồn kho từ DB để tránh client sửa giá
         $preparedItems = [];
         $total = 0;
@@ -64,7 +79,8 @@ class OrderService {
         foreach ($items as $item) {
             $productId = (int)($item['productId'] ?? 0);
             $ml = (int)($item['ml'] ?? 0);
-            $qty = max(1, (int)($item['quantity'] ?? 1));
+            $qty = filter_var($item['quantity'] ?? null, FILTER_VALIDATE_INT, ['options'=>['min_range'=>1,'max_range'=>100]]);
+            if ($qty === false) throw new InvalidArgumentException('Số lượng không hợp lệ.');
 
             $product = $this->productRepo->findById($productId);
             if (!$product) {
@@ -112,52 +128,45 @@ class OrderService {
                 $this->productRepo->decreaseStock($pItem['productId'], $pItem['ml'], $pItem['quantity']);
             }
 
+            NotificationService::enqueue($this->db,$orderId,$email,'Chờ xác nhận');
             $this->db->commit();
             return $this->orderRepo->findById($orderId);
         } catch (Throwable $e) {
-            $this->db->rollBack();
+            if ($this->db->inTransaction()) $this->db->rollBack();
             throw $e;
         }
     }
 
-    // Admin cập nhật trạng thái đơn hàng
+    public const TRANSITIONS = [
+        'Chờ xác nhận'=>['Đã xác nhận','Đã hủy'], 'Đã xác nhận'=>['Đang giao','Đã hủy'],
+        'Đang giao'=>['Giao thành công'], 'Giao thành công'=>[], 'Đã hủy'=>[]
+    ];
     public function updateStatus(int $id, string $status): array {
-        if (!in_array($status, self::VALID_STATUSES, true)) {
-            throw new InvalidArgumentException('Trạng thái đơn hàng không hợp lệ.');
-        }
-        $order = $this->orderRepo->findById($id);
-        if (!$order) {
-            throw new RuntimeException('Không tìm thấy đơn hàng.', 404);
-        }
-
-        // Nếu chuyển sang Đã hủy từ trạng thái khác, hoàn lại tồn kho
-        if ($status === 'Đã hủy' && $order['status'] !== 'Đã hủy') {
-            foreach ($order['items'] as $item) {
-                $this->productRepo->increaseStock($item['productId'], $item['ml'], $item['quantity']);
-            }
-        }
-
-        $this->orderRepo->updateStatus($id, $status);
-        return $this->orderRepo->findById($id);
+        return $this->transition($id, $status, null);
     }
-
-    // Người dùng tự hủy đơn khi đang Chờ xác nhận
     public function cancel(int $id, int $userId): array {
-        $order = $this->orderRepo->findById($id);
-        if (!$order) {
-            throw new RuntimeException('Không tìm thấy đơn hàng.', 404);
-        }
-        if ((int)$order['userId'] !== $userId) {
-            throw new RuntimeException('Bạn không có quyền hủy đơn hàng này.', 403);
-        }
-        if ($order['status'] !== 'Chờ xác nhận') {
-            throw new InvalidArgumentException('Chỉ có thể hủy đơn hàng đang ở trạng thái Chờ xác nhận.');
-        }
-
-        foreach ($order['items'] as $item) {
-            $this->productRepo->increaseStock($item['productId'], $item['ml'], $item['quantity']);
-        }
-        $this->orderRepo->updateStatus($id, 'Đã hủy');
-        return $this->orderRepo->findById($id);
+        return $this->transition($id, 'Đã hủy', $userId);
+    }
+    private function transition(int $id, string $status, ?int $userId): array {
+        $this->db->beginTransaction();
+        try {
+            $lock = $this->db->prepare('SELECT id FROM Orders WHERE id=? FOR UPDATE');
+            $lock->execute([$id]); $lock->fetch(); $lock->closeCursor();
+            $order = $this->orderRepo->findById($id);
+            if (!$order) throw new RuntimeException('Không tìm thấy đơn hàng.',404);
+            if ($userId !== null && (int)$order['userId'] !== $userId) throw new RuntimeException('Không có quyền.',403);
+            if ($order['status'] !== $status) {
+                if ($order['paymentMethod']==='VNPay') {
+                    $q=$this->db->prepare('SELECT state FROM Payments WHERE orderId=?');$q->execute([$id]);$state=$q->fetchColumn();
+                    if (($status==='Đã hủy' && in_array($state,['pending','paid'],true)) || ($status!=='Đã hủy' && $state!=='paid')) throw new RuntimeException('Cần đối soát giao dịch VNPay trước khi đổi trạng thái.',409);
+                }
+                if (($userId !== null && $order['status'] !== 'Chờ xác nhận') || !in_array($status,self::TRANSITIONS[$order['status']] ?? [],true)) throw new RuntimeException('Chuyển trạng thái không hợp lệ.',409);
+                if ($status === 'Đã hủy') foreach ($order['items'] as $item) $this->productRepo->increaseStock($item['productId'],$item['ml'],$item['quantity']);
+                $this->orderRepo->updateStatus($id,$status);
+                NotificationService::enqueue($this->db,$id,$order['email'],$status);
+            }
+            $this->db->commit();
+            return $this->orderRepo->findById($id);
+        } catch (Throwable $e) { if ($this->db->inTransaction()) $this->db->rollBack(); throw $e; }
     }
 }

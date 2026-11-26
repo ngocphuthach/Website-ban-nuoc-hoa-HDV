@@ -27,6 +27,7 @@ class CheckoutPage {
         }
 
         this.renderCartSummary();
+        new ApiService().get('/payments/config').then(cfg=>{const field=document.querySelector('input[name="paymentMethod"]');if(cfg.enabled && field && !document.querySelector('input[value="VNPay"]')) { const label=document.createElement('label'); const radio=document.createElement('input'); radio.type='radio';radio.name='paymentMethod';radio.value='VNPay';label.append(radio,document.createTextNode(' VNPay Sandbox'));field.closest('label')?.after(label); }}).catch(()=>{});
         this.setupEvents();
     }
 
@@ -45,8 +46,8 @@ class CheckoutPage {
         listEl.innerHTML = items.map(item => `
             <div class="checkout-summary-item">
                 <div>
-                    <strong>${item.name}</strong>
-                    <small>${item.ml}ml × ${item.quantity}</small>
+                    <strong>${escapeHtml(item.name)}</strong>
+                    <small>${Number(item.ml)}ml × ${Number(item.quantity)}</small>
                 </div>
                 <span>${cart.formatPrice(item.price * item.quantity)}</span>
             </div>
@@ -78,6 +79,7 @@ class CheckoutPage {
     }
 
     async submitOrder() {
+        if (this.submitting) return;
         const items = cart.getItems();
         if (items.length === 0) {
             toast.error('Giỏ hàng của bạn đang trống.');
@@ -98,12 +100,14 @@ class CheckoutPage {
         };
 
         try {
+            this.submitting = true;
             const order = await this.orderService.create(payload);
             cart.clear();
+            if(payload.paymentMethod==='VNPay'){ window.location.hash='#trang-lich-su'; const pay=await new ApiService().post('/payments/'+order.id+'/start',{}); window.location.assign(pay.url); return; }
             toast.success(`Đặt hàng thành công! Mã đơn #${order.id}`);
             window.location.hash = '#trang-lich-su';
         } catch (err) {
             toast.error(err.message);
-        }
+        } finally { this.submitting = false; }
     }
 }

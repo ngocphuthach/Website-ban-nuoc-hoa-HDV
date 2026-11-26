@@ -1,0 +1,141 @@
+/* Scoped to customer catalog, detail, story, and contact views; typography unified */
+.signature-page{--sig-ink:#29241e;--sig-paper:#f5f0e6;--sig-accent:#98754c;color:var(--sig-ink);background:var(--sig-paper);padding:0 0 70px;font-family:var(--font-sans);font-size:15.5px;line-height:1.65;letter-spacing:normal;min-height:75vh}
+.signature-page h1,.signature-page h2,.signature-page h3{font-family:var(--font-display);font-weight:500;line-height:1.22;color:inherit;letter-spacing:-.01em}
+.signature-page h1{font-size:clamp(38px,4.5vw,60px)}
+.signature-page h2{font-size:clamp(28px,3vw,40px)}
+.signature-page h3{font-size:clamp(20px,2.2vw,26px)}
+.signature-page p{line-height:1.68;letter-spacing:normal}
+.sig-label{display:block;font-size:12px;letter-spacing:.06em;font-weight:600;color:var(--sig-accent);margin-bottom:12px}
+.sig-collection-hero{display:grid;grid-template-columns:1fr 1fr;min-height:360px;background:#e6ddce}
+.sig-collection-hero>div{padding:clamp(30px,6vw,88px);align-self:center}
+.sig-collection-hero img{width:100%;height:100%;max-height:500px;object-fit:cover}
+.sig-collection-hero p{margin-top:16px;max-width:44ch;font-size:15.5px}
+.sig-catalog{display:grid;grid-template-columns:250px minmax(0,1fr);gap:48px;padding-block:60px}
+.sig-filters{align-self:start;position:sticky;top:105px;border-right:1px solid #cfc4b2;padding-right:24px}
+.sig-filters h2{font-size:30px;margin-bottom:18px}
+.sig-filters label,.sig-contact-body label{display:block;font-size:14px;font-weight:500;margin:16px 0 6px}
+.signature-page input,.signature-page select,.signature-page textarea{background:transparent;color:#29241e;border:1px solid #c7b9a4;border-radius:0;width:100%;padding:11px 12px;min-width:0;font-family:var(--font-sans);font-size:14.5px;letter-spacing:normal}
+.signature-page select option{background:#f5f0e6;color:#29241e}
+.sig-filters .btn-outline{margin-top:18px;width:100%;color:#29241e;border-color:#a68a65}
+.sig-filter-note{border-top:1px solid #cfc4b2;margin-top:28px;padding-top:18px;font-size:13.5px;line-height:1.7}
+.sig-filter-note a,.sig-breadcrumb a{color:#795936;font-weight:500}
+.sig-results-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:26px}
+.sig-results-head h2{font-size:clamp(28px,3.2vw,40px)}
+.sig-results-head p{font-size:14px;margin-top:8px;color:#665a4d}
+.sig-view{display:flex;gap:5px}
+.sig-view button{background:transparent;border:1px solid #c7b9a4;padding:8px 12px;cursor:pointer;color:#29241e}
+.sig-view button[aria-pressed=true]{background:#29241e;color:#fff}
+.maison-store #product-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.maison-store #product-grid[data-columns="2"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+.signature-page .maison-product .product-card-img{background:#e7dece}
+.signature-page .maison-product .product-title{color:#29241e;font-family:var(--font-sans);font-size:17px;font-weight:600;line-height:1.4;letter-spacing:normal}
+.signature-page .price-current{color:#29241e;font-size:17px;font-weight:600}
+.signature-page .maison-add{color:#29241e;border-color:#cfc4b2;font-size:14px}
+.signature-page .product-brand,.signature-page .product-type{color:#7a6041;font-size:12.5px;letter-spacing:.02em}
+.signature-page .page-btn{color:#29241e;border-color:#b8a58b;font-size:14px}
+.sig-detail{padding-block:30px 70px}
+.sig-breadcrumb{font-size:13.5px;margin:0 0 30px}
+.maison-store .sig-detail .detail-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:40px 7%;background:none;backdrop-filter:none;border:0;box-shadow:none}
+.sig-detail-media{min-width:0}
+.sig-detail .gallery-stage{background:#e6ddce}
+.sig-photo-caption{font-size:12.5px;margin:12px 0;color:#6c6052}
+.sig-detail .detail-info{padding-top:16px}
+.sig-detail .detail-title{color:#29241e}
+.sig-detail .detail-brand{color:#88653d;font-size:13px;letter-spacing:.04em}
+.sig-detail .detail-price-current{color:#88653d;font-size:24px;font-weight:600;font-variant-numeric:tabular-nums}
+.sig-detail .detail-category,.sig-detail .detail-desc,.sig-detail .detail-sizes label{color:#51473b;font-size:15px}
+.sig-detail .size-btn{background:transparent;color:#29241e;border:1px solid #b9aa92;box-shadow:none}
+.sig-detail .size-btn.active{background:#29241e;color:#fff;border-color:#29241e}
+.sig-detail .size-tag{color:inherit}
+.sig-detail .qty-input-group button{color:#29241e;background:#e6ddce}
+.sig-detail .detail-actions{flex-wrap:wrap}
+.maison-store .sig-detail .btn-gold,.signature-page .sig-cta{background:#29241e;color:#fff;border:0;padding:13px 24px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:14px;font-weight:600;letter-spacing:.01em;cursor:pointer;text-decoration:none;transition:background .2s,transform .2s;box-shadow:none}
+.signature-page .sig-cta:hover,.maison-store .sig-detail .btn-gold:hover{transform:translateY(-2px);background:#796044}
+.sig-detail-notes{margin-top:28px}
+.signature-page details{border-top:1px solid #c7b9a4;padding:16px 0}
+.signature-page summary{cursor:pointer;font-weight:600;font-size:15px}
+.signature-page details p{margin-top:10px;font-size:14.5px}
+.sig-detail .store-extras{grid-column:1/-1;border:1px solid #c7b9a4;background:#eee6d8;color:#29241e;padding:28px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.sig-detail .store-extras h2,.sig-detail .store-extras>div{width:100%}
+.sig-related{margin-top:70px}
+.sig-related h2{margin-bottom:28px}
+.sig-story-hero,.sig-contact-photo{position:relative;min-height:500px;display:flex;align-items:end;overflow:hidden;background:#211a15;color:#fff}
+.sig-story-hero img,.sig-contact-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sig-story-hero:after,.sig-contact-photo:after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#17110edb,transparent),linear-gradient(0deg,#17110e90,transparent)}
+.sig-story-hero>div,.sig-contact-photo>div{position:relative;z-index:1;padding:clamp(30px,6vw,88px)}
+.sig-story-hero .sig-label,.sig-contact-photo .sig-label{color:#e3cba3}
+.sig-story-hero h1,.sig-contact-photo h1{color:#fff}
+.sig-story-intro{max-width:850px;margin:auto;text-align:center;padding:84px 25px}
+.sig-story-intro p{max-width:60ch;margin:22px auto 0}
+.sig-story-split{display:grid;grid-template-columns:1fr 1fr;background:#e6ddce}
+.sig-story-split img{width:100%;height:100%;max-height:520px;object-fit:cover}
+.sig-story-split>div{padding:clamp(30px,6vw,80px);align-self:center}
+.sig-story-split p{margin:20px 0}
+.sig-values{padding-block:72px}
+.sig-values>div{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:32px}
+.sig-values article{border-top:1px solid #b8a58b;padding:24px 0}
+.sig-values h3{font-size:26px;margin:12px 0}
+.sig-contact{display:grid;grid-template-columns:1fr 1fr}
+.sig-contact-photo h1{font-size:clamp(36px,4.2vw,56px)}
+.sig-contact-body{padding:clamp(25px,5.5vw,76px)}
+.sig-contact-body form{margin-top:22px;display:grid;gap:8px}
+.sig-contact-body label input,.sig-contact-body label select,.sig-contact-body label textarea{display:block;margin-top:6px}
+.sig-contact-body small{font-size:12.5px;color:#6b5f52}
+.sig-faq{display:grid;grid-template-columns:1fr 1fr;gap:48px;padding-block:68px}
+.sig-visible{animation:sig-rise .7s both}
+@keyframes sig-rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+/* === Bộ lọc Khoảng giá (Maison Signature Ivory + Champagne Gold) === */
+.sig-filters-head{display:flex;justify-content:space-between;align-items:center}
+.sig-drawer-close,.sig-mobile-filter-btn,.sig-mobile-apply,.sig-filter-backdrop{display:none}
+.sig-results-controls{display:flex;align-items:center;gap:10px}
+.sig-price-filter{margin-top:22px;padding-top:18px;border-top:1px solid #cfc4b2}
+.sig-price-toggle{width:100%;display:flex;justify-content:space-between;align-items:center;background:none;border:0;color:#29241e;font-family:var(--font-display);font-size:21px;font-weight:600;cursor:pointer;padding:4px 0}
+.sig-price-toggle i{font-size:12px;color:#98754c;transition:transform .25s ease}
+.sig-price-toggle[aria-expanded="false"] i{transform:rotate(180deg)}
+.sig-price-body{margin-top:12px;transition:opacity .25s ease}
+.sig-price-body.collapsed{display:none}
+.dual-range-values{display:flex;justify-content:space-between;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;color:#795936;margin-bottom:10px}
+.dual-range-wrap{position:relative;height:28px;display:flex;align-items:center}
+.dual-range-track,.dual-range-fill{position:absolute;height:4px;border-radius:999px;pointer-events:none}
+.dual-range-track{width:100%;background:#ddd2c0}
+.dual-range-fill{background:linear-gradient(90deg,#b89232,#D4AF37);transition:left .08s,width .08s}
+.dual-range-wrap input[type="range"]{position:absolute;left:0;width:100%;margin:0;padding:0;border:0;background:transparent;pointer-events:none;-webkit-appearance:none;appearance:none;height:28px}
+.dual-range-wrap input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;pointer-events:auto;width:18px;height:18px;border-radius:50%;background:#29241e;border:2px solid #D4AF37;box-shadow:0 2px 8px rgba(0,0,0,.22);cursor:pointer;transition:transform .18s ease}
+.dual-range-wrap input[type="range"]::-webkit-slider-thumb:hover,.dual-range-wrap input[type="range"]:focus-visible::-webkit-slider-thumb{transform:scale(1.18);background:#D4AF37;border-color:#29241e}
+.dual-range-wrap input[type="range"]::-moz-range-thumb{pointer-events:auto;width:18px;height:18px;border-radius:50%;background:#29241e;border:2px solid #D4AF37;cursor:pointer}
+.price-inputs-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.price-inputs-grid label{margin:4px 0 4px;font-size:12.5px;color:#5e5245}
+.price-inputs-grid input{padding:8px 10px;font-size:13.5px;font-variant-numeric:tabular-nums}
+.price-filter-error{color:#b93838;font-size:12.5px;min-height:18px;margin-top:6px;line-height:1.4}
+.sig-price-presets{display:grid;gap:6px;margin-top:10px}
+.price-preset-btn{text-align:left;padding:8px 10px;font-family:var(--font-sans);font-size:13px;font-weight:400;background:rgba(255,255,255,.35);border:1px solid #d5c8b4;color:#29241e;cursor:pointer;transition:all .2s ease}
+.price-preset-btn:hover,.price-preset-btn.active{background:#29241e;color:#F3E5AB;border-color:#D4AF37}
+.sig-filters .btn-price-reset{margin-top:12px;font-size:13.5px;padding:9px 12px}
+.active-price-badge{margin-top:10px}
+.price-chip{display:inline-flex;align-items:center;gap:8px;padding:5px 12px;background:#ebe1cf;border:1px solid #D4AF37;font-size:13px;color:#29241e}
+.price-chip button{background:none;border:0;color:#795936;font-size:16px;line-height:1;cursor:pointer}
+.matched-size-pill{display:inline-block;margin-top:6px;padding:2px 8px;font-size:12px;background:#ebe1cf;border:1px solid #c7b494;color:#6c502f}
+.sig-skeleton-card{background:#eee6d8;padding:12px;border:1px solid #dfd4c2}
+.sig-skeleton-img{aspect-ratio:3/4;background:linear-gradient(90deg,#e4dac8 25%,#f2eadc 50%,#e4dac8 75%);background-size:200% 100%;animation:sigShimmer 1.3s infinite}
+.sig-skeleton-line{height:12px;margin-top:12px;background:linear-gradient(90deg,#e4dac8 25%,#f2eadc 50%,#e4dac8 75%);background-size:200% 100%;animation:sigShimmer 1.3s infinite}
+.sig-skeleton-line.short{width:45%}.sig-skeleton-line.price{width:60%;height:14px}
+@keyframes sigShimmer{to{background-position:-200% 0}}
+.sig-empty-state{background:#eee6d8;border:1px solid #d5c8b4;padding:48px 20px;text-align:center}
+.sig-empty-state p{margin:10px 0 18px;color:#5f5345}
+
+@media(max-width:850px){
+  .sig-catalog{grid-template-columns:1fr;gap:25px}
+  .sig-mobile-filter-btn{display:inline-flex;padding:8px 12px;font-size:13px;color:#29241e;border-color:#a68a65}
+  .sig-filter-backdrop.active{display:block;position:fixed;inset:0;background:rgba(10,10,10,.55);z-index:1190}
+  .sig-filters{position:fixed;top:0;left:0;bottom:0;width:min(340px,88vw);background:#f5f0e6;z-index:1200;padding:22px 18px 30px;overflow-y:auto;transform:translateX(-105%);transition:transform .32s ease;display:block;border-right:1px solid #c7b9a4}
+  .sig-filters.open{transform:translateX(0)}
+  .sig-drawer-close{display:block;background:none;border:0;font-size:26px;color:#29241e;cursor:pointer}
+  .sig-mobile-apply{display:block;width:100%;margin-top:18px;text-align:center}
+  .dual-range-wrap input[type="range"]::-webkit-slider-thumb{width:24px;height:24px}
+  .sig-collection-hero,.sig-story-split,.sig-contact,.sig-faq,.maison-store .sig-detail .detail-layout{grid-template-columns:1fr}
+  .sig-collection-hero img{height:260px}.sig-story-hero,.sig-contact-photo{min-height:400px}
+  .maison-store #product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sig-values>div{grid-template-columns:1fr}.sig-story-intro{padding:56px 20px}.sig-results-head{align-items:start}.sig-detail .store-extras{padding:18px}
+}
+@media(prefers-reduced-motion:reduce){.sig-visible{animation:none}}

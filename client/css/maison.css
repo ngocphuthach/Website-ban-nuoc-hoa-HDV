@@ -1,0 +1,86 @@
+/* MAISON / editorial interface — normalized typography */
+.maison-store{--bg:#10100f;--surface:#1a1917;--surface2:#24221f;--surface-solid:#1a1917;--gold:#d7b982;--gold-light:#edddbd;--text:#f5f0e7;--text-muted:#bcb6aa;--border:#ffffff20;background:var(--bg);font-family:var(--font-sans);font-size:15px;line-height:1.65;letter-spacing:normal}
+.maison-store .container{max-width:1440px;padding-inline:clamp(20px,5vw,72px)}
+.maison-store .navbar{padding:14px 0;background:#10100ff5;border-bottom:1px solid #ffffff18;box-shadow:none}
+.maison-store .nav-container{max-width:1480px;padding-inline:clamp(20px,5vw,72px)}
+.maison-store .maison-wordmark{font-family:var(--font-display);font-weight:600;font-size:26px;line-height:1.1;letter-spacing:-.01em;color:#f7f0e3;background:none;-webkit-text-fill-color:initial;animation:none;white-space:nowrap}
+.maison-wordmark span{color:#d7b982}
+.maison-wordmark small{display:block;font-family:var(--font-sans);font-size:10px;font-weight:500;line-height:1.6;letter-spacing:.08em;color:#bcb6aa}
+.maison-store .nav-links a{font-size:14px;font-weight:500;letter-spacing:normal;text-transform:none}
+.maison-store .nav-links{gap:clamp(16px,2vw,32px)}
+.maison-store #main-content{padding-top:82px}
+.maison-hero{display:grid;grid-template-columns:.95fr 1.05fr;min-height:clamp(520px,74vh,760px);max-width:1800px;margin:auto;padding:0;overflow:hidden;background:#141310}
+.maison-copy{display:flex;flex-direction:column;justify-content:center;padding:clamp(35px,6vw,92px);position:relative;background:radial-gradient(ellipse at 100% 80%,#3b2d1f 0%,transparent 60%)}
+.maison-kicker{font-family:var(--font-sans);font-weight:600;font-size:12px;line-height:1.4;letter-spacing:.06em;color:#d7b982;display:inline-flex;gap:10px;align-items:center}
+.maison-kicker>span{height:1px;width:28px;background:currentColor}
+.maison-copy h1{font-family:var(--font-display);font-weight:500;font-size:clamp(46px,5.2vw,72px);line-height:1.15;letter-spacing:-.015em;margin:24px 0 20px;color:#f5f0e7;animation:maison-up .7s both}
+.maison-copy h1 em,.maison-heading h2 em,.maison-editorial h2 em{font-weight:500;font-style:italic;color:#d7b982}
+.maison-copy p{max-width:46ch;font-size:15.5px;line-height:1.68;letter-spacing:normal;color:#c3bcb0;margin-bottom:28px;animation:maison-up .8s .1s both}
+.maison-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.maison-store .btn-gold{border-radius:2px;background:#d7b982;border:1px solid #d7b982;color:#15120e;font-family:var(--font-sans);font-size:14px;font-weight:600;letter-spacing:.01em;text-transform:none;box-shadow:none;padding:13px 24px}
+.maison-store .btn-outline{border-radius:2px;box-shadow:none;font-family:var(--font-sans);font-size:14px;font-weight:500;letter-spacing:.01em}
+.maison-link{font-size:14px;font-weight:500;color:#e9d9bc;border-bottom:1px solid #d7b98266;padding:6px 0;white-space:nowrap;transition:color .2s}
+.maison-link:hover{color:#fff}
+.maison-index{display:flex;align-items:center;gap:12px;margin-top:clamp(32px,5vw,72px);color:#c8bda9;font-size:13px}
+.maison-index>span:nth-child(2){width:56px;height:1px;background:#d7b98255}
+.maison-index small{letter-spacing:.05em;font-size:12px}
+.maison-visual{position:relative;min-height:100%;background:#e8dfd3;overflow:hidden}
+.maison-visual>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 45%;animation:maison-image 1s ease both}
+.maison-visual:after{content:'';position:absolute;inset:55% 0 0;background:linear-gradient(transparent,#100e0bc9);pointer-events:none}
+.maison-image-label{position:absolute;z-index:1;bottom:28px;left:32px;right:32px;color:#fff;display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center}
+.maison-image-label small{grid-column:1/-1;letter-spacing:.06em;font-size:12px;color:#e8dfd3}
+.maison-image-label strong{font-family:var(--font-display);font-weight:500;font-size:clamp(22px,2.4vw,30px);line-height:1.25}
+.maison-image-label button{width:40px;height:40px;border:1px solid #fff8;background:#15120e77;color:white;cursor:pointer;font-size:20px;margin-left:6px}
+.maison-image-label button:hover{background:#d7b982;color:#15120e}
+.maison-visual .maison-image-in{animation:maison-image .6s both}
+@keyframes maison-image{from{opacity:.35;transform:scale(1.035)}to{opacity:1;transform:scale(1)}}
+@keyframes maison-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.maison-strip{display:flex;justify-content:space-around;gap:18px;padding:18px 5vw;border-block:1px solid #ffffff18;background:#161512;color:#c5b9a3;font-size:12.5px;font-weight:500;letter-spacing:.04em}
+.maison-heading{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:28px}
+.maison-heading h2,.maison-editorial h2{font-family:var(--font-display);font-weight:500;font-size:clamp(30px,3.2vw,42px);line-height:1.2;letter-spacing:-.01em;margin-top:10px}
+.maison-catalog{padding-block:clamp(46px,5.5vw,84px)}
+.maison-store .home-filter-tabs{justify-content:flex-start;margin:0 0 28px;gap:8px}
+.maison-store .home-tab-btn{border-radius:2px;background:transparent;border:1px solid #ffffff25;padding:9px 20px;font-size:14px;font-weight:500;color:#c9c0b1}
+.maison-store .home-tab-btn.active{background:#d7b982;color:#15120e;border-color:#d7b982}
+.maison-store .product-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(14px,2vw,30px)}
+.maison-store .maison-product{background:transparent;border:0;box-shadow:none;border-radius:0;overflow:visible;animation:maison-up .45s both}
+.maison-store .maison-product:hover{transform:none;box-shadow:none}
+.maison-store .product-card-img{background:#eee9df;aspect-ratio:4/5;border-radius:0;isolation:isolate}
+.maison-store .product-card-img img{object-fit:contain;padding:12px;mix-blend-mode:multiply}
+.maison-store .product-card-img .card-alt-image{background:#eee9df;mix-blend-mode:normal}
+.maison-store .product-card-body{padding:16px 0 0;text-align:left}
+.maison-store .product-title{font-family:var(--font-sans);font-weight:600;font-size:clamp(16px,1.25vw,18px);line-height:1.4;color:#f5f0e7;letter-spacing:normal}
+.maison-store .product-brand{color:#d7b982;font-size:12px;font-weight:500;letter-spacing:.04em}
+.maison-store .product-type{color:#aaa398;font-size:13px;letter-spacing:normal}
+.maison-store .price-current{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;color:#f0dfbf}
+.maison-add{margin-top:14px;width:100%;background:none;border:0;border-block:1px solid #ffffff20;color:#e5daca;display:flex;justify-content:space-between;align-items:center;padding:11px 0;font-family:var(--font-sans);font-size:14px;font-weight:500;letter-spacing:normal;cursor:pointer;transition:color .2s,padding .2s}
+.maison-add:hover{color:#d7b982;padding-inline:8px}
+.maison-store .product-overlay-actions{background:none}
+.maison-editorial{display:grid;grid-template-columns:1fr 1fr;background:#e9e1d3;color:#1b1814;min-height:440px}
+.maison-editorial-photo{position:relative;min-height:440px}
+.maison-editorial-photo img{position:absolute;width:100%;height:100%;object-fit:cover;object-position:center}
+.maison-editorial-copy{padding:clamp(30px,6.5vw,92px);align-self:center}
+.maison-editorial-copy .maison-kicker{color:#81643f}
+.maison-editorial-copy h2 em{color:#876741}
+.maison-editorial-copy p{max-width:44ch;font-size:15.5px;line-height:1.68;color:#4a4339;margin:20px 0 26px}
+.maison-brands{padding-block:40px 84px}
+.maison-store .section-header{text-align:left;margin-bottom:28px}
+.maison-store .section-header h2{font-family:var(--font-display);font-size:clamp(30px,3.4vw,42px);line-height:1.2;color:#f5f0e7}
+.maison-store .section-header .divider{margin-left:0;width:46px}
+.maison-store .filter-bar{padding:18px 0;background:none;border:0;border-block:1px solid #ffffff20;border-radius:0;box-shadow:none}
+.maison-store input,.maison-store select,.maison-store textarea{border-radius:3px;font-family:var(--font-sans);font-size:14.5px;letter-spacing:normal}
+.maison-store .detail-layout{padding:0;gap:clamp(25px,5vw,85px);align-items:start}
+.maison-store .gallery-stage{border-radius:0;background:#eee9df}
+.maison-store .gallery-main img{mix-blend-mode:multiply}
+.maison-store .gallery-thumbs button{border-radius:0}
+.maison-store .detail-title{font-family:var(--font-display);font-size:clamp(30px,3.6vw,44px);line-height:1.2;letter-spacing:-.01em}
+.maison-store .cart-sidebar{border-radius:0;background:#1a1917}
+.maison-store .card-box,.maison-store .auth-card{border-radius:0;background:#1a1917;box-shadow:none}
+.maison-store #trang-dang-nhap .container,.maison-store #trang-dang-ky .container{display:grid;grid-template-columns:1fr 1fr;gap:0;max-width:1200px}
+.maison-store #trang-dang-nhap .container:before,.maison-store #trang-dang-ky .container:before{content:'';background:url('../../pic/banner-contact.jpg') center/cover;min-height:420px}
+.maison-store #trang-dang-nhap .auth-card,.maison-store #trang-dang-ky .auth-card{max-width:none;width:100%;margin:0;padding:clamp(25px,5vw,65px)}
+.maison-store .footer{background:#151411;border-top:1px solid #ffffff20}
+.maison-store .footer h4{color:#e5daca}
+@media(max-width:1000px){.maison-store .product-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.maison-copy{padding:40px}.maison-actions{gap:12px}}
+@media(max-width:720px){.maison-hero{grid-template-columns:1fr;min-height:0}.maison-copy{padding:44px 20px 32px}.maison-copy h1{font-size:clamp(36px,9vw,48px);margin:18px 0}.maison-index{margin-top:26px}.maison-visual{min-height:380px}.maison-image-label{left:18px;right:18px;bottom:20px}.maison-strip{overflow-x:auto;justify-content:flex-start;white-space:nowrap}.maison-heading{align-items:start;flex-wrap:wrap}.maison-store .product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 14px}.maison-editorial{grid-template-columns:1fr}.maison-editorial-photo{min-height:320px}.maison-editorial-copy{padding:36px 20px}.maison-store #trang-dang-nhap .container,.maison-store #trang-dang-ky .container{grid-template-columns:1fr}.maison-store #trang-dang-nhap .container:before,.maison-store #trang-dang-ky .container:before{min-height:200px}.maison-store .nav-links.open{background:#151411}.maison-store .nav-container{gap:10px}.maison-store .maison-wordmark{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.maison-store *, .maison-store *:before,.maison-store *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

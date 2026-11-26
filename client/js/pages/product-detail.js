@@ -25,21 +25,17 @@ class ProductDetailPage {
     renderProduct(p) {
         const container = document.getElementById('product-detail-container');
         const sizes = p.sizes || [];
-        let imgSrc = p.image || 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=700';
-        if (imgSrc.startsWith('pic/')) imgSrc = '../../' + imgSrc;
 
         container.innerHTML = `
-            <div class="detail-gallery">
-                <img src="${imgSrc}" alt="${p.name}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1541643600914-78b084683601?w=700'">
-            </div>
-            <div class="detail-info">
-                <span class="detail-brand">${p.brandName || p.brand} • ${p.code}</span>
-                <h1 class="detail-title">${p.name}</h1>
-                <p class="detail-category">Phân loại: ${p.categoryName || p.type}</p>
+            <div class="sig-detail-media"><span class="sig-label">Thư viện hình ảnh</span><div class="detail-gallery"></div><p class="sig-photo-caption">Chọn ảnh thu nhỏ hoặc chạm ảnh để xem chi tiết.</p></div>
+            <div class="detail-info"><span class="sig-label">Thông tin sản phẩm</span>
+                <span class="detail-brand">${escapeGallery(p.brandName || p.brand)} • ${escapeGallery(p.code)}</span>
+                <h1 class="detail-title">${escapeGallery(p.name)}</h1>
+                <p class="detail-category">Phân loại: ${escapeGallery(p.categoryName || p.type)}</p>
 
                 <div class="detail-price-box" id="detail-price-box"></div>
 
-                <p class="detail-desc">${p.shortDesc || 'Mùi hương sang trọng, lưu hương lâu bền suốt ngày dài.'}</p>
+                <p class="detail-desc">${escapeGallery(p.shortDesc || 'Mùi hương sang trọng, lưu hương lâu bền suốt ngày dài.')}</p>
 
                 <div class="detail-sizes">
                     <label>Chọn dung tích (Chai chính hãng):</label>
@@ -66,9 +62,12 @@ class ProductDetailPage {
                         <i class="fa-solid fa-bag-shopping"></i> Thêm vào giỏ hàng
                     </button>
                 </div>
+                <div class="sig-detail-notes"><details open><summary>Thông tin mùi hương</summary><p>${escapeGallery(p.shortDesc || "Chưa có mô tả tầng hương cho sản phẩm này.")}</p></details><details><summary>Dung tích và tồn kho</summary><p>Chọn dung tích để xem giá và số lượng hiện có.</p></details></div>
             </div>
         `;
 
+        window.mountStoreExtras?.(container,p);
+        mountProductGallery(container.querySelector('.detail-gallery'), p);
         this.updatePriceDisplay();
     }
 

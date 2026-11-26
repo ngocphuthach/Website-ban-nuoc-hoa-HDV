@@ -41,7 +41,7 @@ class DashboardPage {
 
         if (!items.length) {
             ctx.fillStyle = '#888';
-            ctx.font = '14px Poppins, sans-serif';
+            ctx.font = '14px "Be Vietnam Pro", sans-serif';
             ctx.fillText('Chưa có dữ liệu doanh thu', 20, h / 2);
             return;
         }
@@ -66,8 +66,8 @@ class DashboardPage {
             ctx.fillRect(x, y, barW, barH);
 
             ctx.fillStyle = '#f5f0eb';
-            ctx.font = '11px Poppins, sans-serif';
-            ctx.fillText(String(item.brand).slice(0, 8), x, h - 18);
+            ctx.font = '11.5px "Be Vietnam Pro", sans-serif';
+            ctx.fillText(String(item.brand).slice(0, 12), x, h - 18);
         });
     }
 
@@ -84,7 +84,7 @@ class DashboardPage {
         const total = items.reduce((s, i) => s + Number(i.count || 0), 0);
         if (!total) {
             ctx.fillStyle = '#888';
-            ctx.font = '14px Poppins, sans-serif';
+            ctx.font = '14px "Be Vietnam Pro", sans-serif';
             ctx.fillText('Chưa có đơn hàng', 20, h / 2);
             if (legend) legend.innerHTML = '';
             return;
